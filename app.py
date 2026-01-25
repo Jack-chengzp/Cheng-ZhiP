@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import re
 import os
-import plotly.graph_objects as go
 
 # ==========================================
 # 1. 页面配置
@@ -16,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. 终极 CSS 注入 (针对性修复)
+# 2. 终极 CSS 注入
 # ==========================================
 st.markdown("""
 <style>
@@ -52,28 +51,32 @@ st.markdown("""
         border-color: #1565c0 !important;
     }
 
-    /* === 2. [核心修复] 绿色计算按钮 (强力覆盖) === */
+    /* === 2. [核心修复] 超大绿色计算按钮 === */
     div.stButton > button {
         background-image: none !important;
         background-color: #2e7d32 !important; /* 鲜艳绿 */
         color: white !important;
         border: 2px solid #1b5e20 !important;
-        box-shadow: 0 4px 10px rgba(46, 125, 50, 0.5) !important;
-        font-size: 2.2rem !important;
+        box-shadow: 0 6px 15px rgba(46, 125, 50, 0.4) !important;
+        font-size: 2.5rem !important; /* 字体加大到 2.5rem */
         font-weight: 900 !important;
-        padding: 20px 40px !important;
-        min-height: 80px !important;
-        border-radius: 16px !important;
+        padding: 25px 40px !important; /* 内边距加大 */
+        min-height: 100px !important;  /* 按钮高度加大 */
+        border-radius: 20px !important;
         width: 100% !important;
         transition: all 0.2s !important;
+        margin-top: 40px !important;
     }
+    
     div.stButton > button:hover {
-        background-color: #1b5e20 !important; 
+        background-color: #1b5e20 !important; /* 悬停深绿 */
         color: #ffffff !important;
-        transform: translateY(-2px);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.6) !important;
     }
+    
     div.stButton > button p {
-        font-size: 2.2rem !important;
+        font-size: 2.5rem !important;
         font-weight: 900 !important;
     }
 
@@ -205,16 +208,16 @@ st.markdown("""
     .risk-card-mid { background:#fff9c4; color:#000; border:6px solid #fbc02d; }
     .risk-card-high { background:#ffebee; color:#b71c1c; border:6px solid #c62828; }
 
-    /* === 7. 异常指标解释框 (替代原指南) === */
+    /* === 7. 异常指标解释框 === */
     .breakdown-box {
         background-color: #ffffff;
         border: 2px solid #e0e0e0;
-        border-left-width: 10px; /* 左侧加粗 */
+        border-left-width: 12px; 
         padding: 35px;
-        border-radius: 8px;
+        border-radius: 12px;
         margin-top: 30px;
         font-size: 1.5rem; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -373,7 +376,7 @@ with col_inputs:
                 user_inputs[clean_name] = st.number_input(label, value=None, placeholder="--", step=0.1, key=f"in_{clean_name}")
         
         st.markdown("<br>", unsafe_allow_html=True)
-        # 绿色按钮
+        # 绿色大按钮
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -440,17 +443,6 @@ with col_results:
             </div>
         </div>
         """, unsafe_allow_html=True)
-        
-        # Gauge Chart
-        st.markdown("<br>", unsafe_allow_html=True)
-        fig = go.Figure(go.Indicator(
-            mode = "gauge+number", value = score,
-            title = {'text': "Risk Severity", 'font': {'size': 30, 'color': "#555", 'weight': 'bold'}},
-            number = {'suffix': " pts", 'font': {'color': color_hex, 'weight': 'bold', 'size': 40}},
-            gauge = {'axis': {'range': [None, 80]}, 'bar': {'color': color_hex}, 'steps': [{'range': [0, 20], 'color': '#a5d6a7'}, {'range': [20, 35], 'color': '#FFF59D'}, {'range': [35, 80], 'color': '#ef9a9a'}]}
-        ))
-        fig.update_layout(height=350, margin=dict(l=30, r=30, t=50, b=10))
-        st.plotly_chart(fig, use_container_width=True)
 
     else:
         # Initial State
