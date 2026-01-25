@@ -5,17 +5,17 @@ import re
 import os
 
 # ==========================================
-# 1. Page Configuration
+# 1. 页面配置
 # ==========================================
 st.set_page_config(
-    page_title="Sepsis Heterogeneity Score (SHScore)", # Changed back to English
+    page_title="Sepsis Heterogeneity Score (SHScore)",
     page_icon="🩺",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # ==========================================
-# 2. Ultimate CSS Styling (V10.0)
+# 2. 终极 CSS 样式 (V11.0 修复版)
 # ==========================================
 st.markdown("""
 <style>
@@ -25,142 +25,84 @@ st.markdown("""
         font-family: 'Roboto', sans-serif;
     }
 
-    /* === Top Spacing Fix === */
+    /* === 0. 顶部布局 === */
     .block-container {
-        padding-top: 3rem !important; 
+        padding-top: 2rem !important; 
         padding-bottom: 5rem !important;
         max-width: 98% !important;
     }
 
-    /* === [CORE FIX] Green Calculate Button (Highest Priority) === */
-    html body div.stButton > button {
-        background-color: #2e7d32 !important; /* Vivid Green */
-        background-image: none !important;    
-        color: #ffffff !important;            /* White Text */
+    /* === 1. [核心] 绿色计算按钮 (强制生效) === */
+    div.stButton > button {
+        background-color: #2e7d32 !important; /* 鲜艳绿 */
+        background-image: none !important;
+        color: #ffffff !important;
         border: 3px solid #1b5e20 !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-        font-size: 2.2rem !important;         
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2) !important;
+        font-size: 32px !important; /* 字体加大 */
         font-weight: 900 !important;
-        padding: 20px 0 !important;
-        min-height: 90px !important;
-        border-radius: 15px !important;
+        padding: 15px 0 !important;
+        min-height: 80px !important;
+        border-radius: 12px !important;
         width: 100% !important;
-        margin-top: 30px !important;
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
+        margin-top: 35px !important;
+        display: block !important;
     }
-    
-    html body div.stButton > button:hover {
+    div.stButton > button:hover {
         background-color: #1b5e20 !important;
-        color: white !important;
         border-color: #004d40 !important;
-        transform: scale(1.02);
+        transform: scale(1.01);
+        color: white !important;
     }
-    html body div.stButton > button p {
-        font-size: 2.2rem !important;
-        font-weight: 900 !important;
+    div.stButton > button p {
+        font-size: 32px !important;
         color: white !important;
     }
 
-    /* === Font Size Forcing (24px / 2.0rem) === */
+    /* === 2. 字体强制扩大 (24px) === */
+    .about-text { font-size: 24px !important; line-height: 1.5 !important; color: #37474f !important; }
     
-    /* About Text */
-    .about-text {
-        font-size: 24px !important;
-        line-height: 1.6 !important;
-        color: #37474f !important;
-    }
-    
-    /* Radio Button Options */
-    div[role="radiogroup"] label p {
-        font-size: 24px !important;
-        font-weight: 600 !important;
-        color: #263238 !important;
-    }
-    div[role="radiogroup"] label {
-        padding: 20px !important;
-        background: #f8f9fa;
-        border: 2px solid #cfd8dc;
-        border-radius: 10px;
-    }
+    /* 单选框 */
+    div[role="radiogroup"] label p { font-size: 24px !important; font-weight: 700 !important; color: #263238 !important; }
+    div[role="radiogroup"] label { padding: 15px !important; background: #f8f9fa; border: 2px solid #cfd8dc; border-radius: 10px; }
 
-    /* Input Field Labels */
-    div[data-testid="stNumberInput"] label p {
-        font-size: 24px !important;
-        font-weight: 900 !important;
-        color: #000000 !important;
-    }
-    div[data-testid="stNumberInput"] input {
-        font-size: 20px !important;
-        min-height: 50px !important;
-    }
+    /* 输入框 */
+    div[data-testid="stNumberInput"] label p { font-size: 24px !important; font-weight: 900 !important; color: #000000 !important; }
+    div[data-testid="stNumberInput"] input { font-size: 22px !important; min-height: 55px !important; }
 
-    /* === Titles === */
-    .main-title {
-        color: #1565c0; font-weight: 900; font-size: 3.5rem; line-height: 1.2; margin-bottom: 10px;
-    }
-    .sub-title {
-        color: #546e7a; font-size: 1.8rem; margin-bottom: 30px;
-    }
-    .section-header {
-        font-size: 2.4rem; font-weight: 900; color: #1a237e;
-        border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px;
-    }
-    .subgroup-title {
-        font-size: 2.2rem; font-weight: 900; color: #000; margin-bottom: 15px;
-    }
+    /* === 3. 标题与模块 === */
+    .main-title { color: #1565c0; font-weight: 900; font-size: 3.5rem; margin-bottom: 10px; }
+    .sub-title { color: #546e7a; font-size: 1.8rem; margin-bottom: 30px; }
+    .section-header { font-size: 2.4rem; font-weight: 900; color: #1a237e; border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px; }
+    .subgroup-title { font-size: 2.2rem; font-weight: 900; color: #000; margin-bottom: 15px; }
 
-    /* === Containers === */
-    .card-container {
-        background-color: #ffffff; padding: 40px; border-radius: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;
-    }
-    .about-box {
-        background-color: #e3f2fd; border-left: 12px solid #1565c0;
-        padding: 30px; border-radius: 12px; margin-bottom: 40px;
-    }
-    .about-title {
-        font-size: 2.4rem; font-weight: 900; color: #0d47a1; margin-bottom: 15px;
-    }
+    /* === 4. 容器 === */
+    .card-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
+    .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 30px; border-radius: 12px; margin-bottom: 40px; }
+    .about-title { font-size: 2.4rem; font-weight: 900; color: #0d47a1; margin-bottom: 15px; }
 
-    /* === Right Side Modules === */
-    .reference-box {
-        background-color: white; border: 3px solid #eee; border-radius: 15px;
-        padding: 25px; margin-bottom: 25px;
-    }
+    /* === 5. 右侧模块 === */
+    .reference-box { background: white; border: 3px solid #eee; border-radius: 15px; padding: 25px; margin-bottom: 25px; }
     .ref-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 15px; border-bottom: 2px solid #eee; }
     .ref-item { font-size: 1.6rem; margin-bottom: 10px; display: flex; align-items: center; }
     .ref-dot { width: 25px; height: 25px; border-radius: 50%; margin-right: 15px; display: inline-block; }
 
-    .risk-result-card {
-        text-align: center; padding: 30px; border-radius: 20px; margin-bottom: 25px;
-    }
+    .risk-result-card { text-align: center; padding: 30px; border-radius: 20px; margin-bottom: 25px; }
     .risk-card-low { background:#e8f5e9; color:#1b5e20; border:5px solid #2e7d32; }
     .risk-card-mid { background:#fff9c4; color:#000; border:5px solid #fbc02d; }
     .risk-card-high { background:#ffebee; color:#b71c1c; border:5px solid #c62828; }
 
-    .protocol-box {
-        background-color: #fafafa; border: 2px solid #e0e0e0; border-left-width: 10px;
-        padding: 25px; border-radius: 10px; margin-bottom: 25px;
-    }
+    .protocol-box { background: #fafafa; border: 2px solid #e0e0e0; border-left-width: 10px; padding: 25px; border-radius: 10px; margin-bottom: 25px; }
     .protocol-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 10px; }
     
-    .breakdown-box {
-        background: white; border: 2px solid #eee; border-left-width: 10px;
-        border-radius: 10px; padding: 25px; margin-top: 25px;
-    }
+    .breakdown-box { background: white; border: 2px solid #eee; border-left-width: 10px; border-radius: 10px; padding: 25px; margin-top: 25px; }
     
-    .placeholder-box {
-        background: #f1f8e9; border: 4px dashed #a5d6a7; border-radius: 20px;
-        min-height: 800px; display: flex; flex-direction: column;
-        justify-content: center; align-items: center; text-align: center;
-    }
+    .placeholder-box { background: #f1f8e9; border: 4px dashed #a5d6a7; border-radius: 20px; min-height: 800px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. Core Logic & Data
+# 3. 核心逻辑 (修复了解析 Bug)
 # ==========================================
 VAR_META = {
     "Age": {"unit": "years", "full": "Age"},
@@ -202,6 +144,7 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
         try: df = pd.read_csv(csv_path)
         except: pass
     if df is None:
+        # Fallback Data
         data = {
             "Variable": ["Age (years)", "APSIII_score (pts)", "BUN (mg/dL)", "Elixhauser_score (pts)", "HCO3 (mmol/L)", "HR (bpm)", "MCV (fL)", "Mechnical_Ventilation (0=No, 1=Yes)", "T (°C)", "WBC (x10^9/L)", "Weight (Kg)", "Aniongap (mmol/L)"],
             "Global": ["< 60 (0)\n>= 60 (6)", "< 50 (0)\n>= 50 (10)", "< 30 (0)\n>= 30 (1)", "< 5 (0)\n>= 5 (2)", "< 22 (3)\n>= 22 (0)", "> 100 (2)\n<= 100 (0)", "> 90 (2)\n<= 90 (0)", "1 (4)\n0 (0)", "> 38 (0)\n<= 38 (2)", "> 12 (1)\n<= 12 (0)", "> 100 (4)\n<= 100 (0)", "> 15 (5)\n<= 15 (0)"],
@@ -212,6 +155,7 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
         df = pd.DataFrame(data)
 
     df = df.rename(columns=lambda x: x.strip())
+    # 标准化变量名，防止 CSV 和代码不一致
     df["Variable"] = df["Variable"].str.replace("fluid_amount", "Fluid Amount", case=False)
     df["Variable"] = df["Variable"].str.replace("aniongap", "Aniongap", case=False)
     
@@ -221,57 +165,100 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
     df_long = df_long.dropna(subset=["RuleString"])
     return df_long[~df_long["RuleString"].isin(["", "N/A", "--"])]
 
+# [重点修复] 全新的解析器，处理 "44.5 - 50.5 (4)" 这种一行多规则的格式
 def parse_rule_string(rule_str):
     rules = []
-    rule_str = str(rule_str).replace("\r\n", "\n")
-    for line in [x.strip() for x in rule_str.split("\n") if x.strip()]:
+    # 移除换行，统一成一行处理
+    rule_str = str(rule_str).replace("\r\n", " ").replace("\n", " ")
+    
+    # 正则表达式：查找所有 (数字) 结尾的片段
+    # 匹配模式： "条件内容 (分数)"
+    # 例如： "< 44.5 (0)" 或 "44.5 - 50.5 (4)"
+    pattern = r"([^\(]+)\s*\((-?\d+)\)"
+    matches = re.findall(pattern, rule_str)
+    
+    for condition_str, points_str in matches:
         try:
-            points_match = re.search(r"\(([-0-9]+)\)", line)
-            if not points_match: continue
-            points = int(points_match.group(1))
-            nums = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|[-+]?\d+", line.split('(')[0])]
+            points = int(points_str)
+            condition_str = condition_str.strip()
+            
+            # 提取条件中的所有数字
+            nums = [float(x) for x in re.findall(r"[-+]?\d*\.\d+|[-+]?\d+", condition_str)]
+            
             mn, mx = -float('inf'), float('inf')
-            if ">=" in line: mn = nums[0] if nums else mn
-            elif ">" in line: mn = nums[0] + 1e-9 if nums else mn
-            elif "<=" in line: mx = nums[0] if nums else mx
-            elif "<" in line: mx = nums[0] - 1e-9 if nums else mx
-            elif "-" in line and len(nums) >= 2: mn, mx = nums[0], nums[1]
-            elif "=" in line or (len(nums)==1): mn, mx = (nums[0], nums[0]) if nums else (mn, mx)
-            rules.append({"min": mn, "max": mx, "points": points, "raw": line})
-        except: continue
+            
+            if not nums:
+                continue # 没有数字跳过
+                
+            # 解析条件逻辑
+            if "-" in condition_str and len(nums) >= 2:
+                # 范围类型： 44.5 - 50.5
+                mn, mx = nums[0], nums[1]
+            elif ">=" in condition_str:
+                mn = nums[0]
+            elif ">" in condition_str:
+                mn = nums[0] + 1e-9 # 微小增量表示大于
+            elif "<=" in condition_str:
+                mx = nums[0]
+            elif "<" in condition_str:
+                mx = nums[0] - 1e-9 # 微小减量表示小于
+            elif "=" in condition_str or len(nums) == 1:
+                # 等于类型
+                mn, mx = nums[0], nums[0]
+                
+            rules.append({"min": mn, "max": mx, "points": points, "raw": f"{condition_str} ({points})"})
+            
+        except:
+            continue
+            
     return rules
 
 def calculate_score(user_inputs, rules_df, selected_group):
     total_score = 0; details = []
     group_rules = rules_df[rules_df["Group"] == selected_group]
+    
     for _, row in group_rules.iterrows():
         raw_var = row["Variable"]
+        # 清洗变量名以匹配输入
         clean_var = re.sub(r"\(.*\)", "", raw_var).strip()
+        
         input_key = None
         for k in user_inputs.keys():
-            if k.lower() == clean_var.lower(): input_key = k; break
+            if k.lower() == clean_var.lower(): 
+                input_key = k; break
+        
         if input_key and user_inputs[input_key] is not None:
-            val = user_inputs[input_key]; parsed = parse_rule_string(row["RuleString"])
-            points_added = 0; matched_rule = None
+            val = user_inputs[input_key]
+            parsed = parse_rule_string(row["RuleString"])
+            
+            points_added = 0
+            matched_rule = None
+            
+            # 遍历该变量的所有规则
             for rule in parsed:
+                # 判断值是否在区间内
                 if rule["min"] <= val <= rule["max"]:
-                    points_added = rule["points"]; matched_rule = rule["raw"]
-                    if points_added > 0: break 
+                    points_added = rule["points"]
+                    matched_rule = rule["raw"]
+                    # 找到匹配规则后，通常跳出（除非有累加逻辑，通常评分表是互斥的）
+                    # 为了优先匹配更精确的规则（如果有重叠），这里假设CSV顺序合理
+                    if points_added != 0: break 
+            
             if points_added != 0:
                 total_score += points_added
                 details.append({"var": clean_var, "val": val, "points": points_added, "rule": matched_rule})
+                
     logit = -3.8 + 0.085 * total_score
     prob = 1 / (1 + np.exp(-logit))
     return total_score, prob, details
 
 # ==========================================
-# 4. Main Interface Layout
+# 4. 主界面布局
 # ==========================================
-# [CHANGED BACK TO ENGLISH]
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-# --- About SHScore ---
+# --- About ---
 st.markdown("""
 <div class="about-box">
     <div class="about-title">📘 About SHScore</div>
@@ -315,7 +302,7 @@ with col_inputs:
                 user_inputs[clean_name] = st.number_input(label, value=None, placeholder="--", step=0.1, key=f"in_{clean_name}")
         
         st.markdown("<br>", unsafe_allow_html=True)
-        # Green Button (Force styled by CSS)
+        # Green Button
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -325,7 +312,7 @@ with col_results:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
-        # Risk Logic based on Mortality Rate (Predicted Mortality)
+        # Risk Logic based on Mortality Rate
         if prob_percent < 10:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
@@ -351,7 +338,7 @@ with col_results:
 - **Source Control:** Urgent surgical consult within 1 hour.
 """
 
-        # 1. Risk Interpretation Legend (Mortality based)
+        # 1. Risk Interpretation
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation (By Mortality Rate)</div>
@@ -373,7 +360,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # 3. Clinical Management Guide (Markdown List)
+        # 3. Clinical Guide (Markdown)
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
@@ -403,7 +390,7 @@ with col_results:
             st.success("✅ All clinical indicators are within the baseline range. (Score: 0)")
 
     else:
-        # Initial Placeholder State
+        # Initial Placeholder
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation</div>
