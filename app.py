@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 自定义 CSS 样式 - 字体加大版
+# 自定义 CSS 样式
 st.markdown("""
 <style>
     @import url('https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Roboto:wght@400;500;700;900&display=swap');
@@ -23,43 +23,50 @@ st.markdown("""
     html, body, [class*="css"] {
         font-family: 'Roboto', sans-serif;
         color: #212121;
-        font-size: 18px; /* 全局基础字体加大 */
+        font-size: 18px;
     }
     
-    /* === 1. 标题与文案增强 (加大) === */
+    /* === 0. 核心修正：去除页面顶部空白 === */
+    .block-container {
+        padding-top: 1.5rem !important; /* 强制减少顶部留白 */
+        padding-bottom: 2rem !important;
+    }
+    
+    /* === 1. 标题与文案增强 === */
     .main-title {
         color: #1565c0; 
         font-weight: 900;
-        font-size: 3.5rem; /* 标题加大 */
+        font-size: 3.5rem; 
         margin-bottom: 0.2rem;
         letter-spacing: -1px;
+        line-height: 1.1;
     }
     .sub-title {
         color: #546e7a;
-        font-size: 1.5rem; /* 副标题加大 */
+        font-size: 1.5rem; 
         font-weight: 400;
         margin-bottom: 2rem;
     }
 
-    /* About 介绍框 - 字体加大 */
+    /* About 介绍框 */
     .about-box {
         background-color: #e3f2fd;
         border-left: 10px solid #1565c0;
         padding: 30px 35px;
         border-radius: 12px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
     .about-title {
         font-weight: 900;
         color: #0d47a1;
-        font-size: 1.6rem; /* 加大 */
+        font-size: 1.6rem; 
         margin-bottom: 15px;
         display: flex;
         align-items: center;
     }
     .about-text {
-        font-size: 1.25rem; /* 正文加大 */
+        font-size: 1.25rem; 
         line-height: 1.6;
         color: #263238;
         text-align: justify;
@@ -69,28 +76,95 @@ st.markdown("""
     /* === 2. 容器与布局 === */
     .card-container {
         background-color: #ffffff;
-        padding: 35px; /* 内边距加大 */
+        padding: 35px; 
         border-radius: 16px;
         box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         border: 1px solid #e0e0e0;
-        margin-bottom: 0px; /* 去除底部空白 */
-        height: 100%; /* 尝试撑满 */
+        margin-bottom: 0px; 
+        height: 100%; 
     }
     
     .section-header {
-        font-size: 1.8rem; /* 加大 */
+        font-size: 2rem; /* Configuration 标题加大 */
         font-weight: 900;
-        color: #263238;
-        margin-bottom: 30px;
-        border-bottom: 4px solid #eceff1;
+        color: #1a237e;
+        margin-bottom: 25px;
+        border-bottom: 5px solid #eceff1;
         padding-bottom: 15px;
-        display: flex;
-        align-items: center;
     }
 
-    /* === 3. 右侧模块高度平衡优化 === */
+    /* === 3. Patient Subgroup 特殊优化 (2x2 排列 + 字体超大) === */
+    .subgroup-title {
+        font-size: 1.6rem;
+        font-weight: 900; /* 极粗 */
+        color: #000000;   /* 纯黑 */
+        margin-bottom: 15px;
+        display: block;
+    }
     
-    /* 占位符模块 - 强制加高以对齐左侧 */
+    /* 强制单选按钮组变成 2x2 网格 */
+    div[role="radiogroup"] {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* 两列等宽 */
+        gap: 15px;
+    }
+    
+    /* 单个选项样式增强 */
+    div[role="radiogroup"] label {
+        background-color: #f5f7f9;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        font-size: 1.3rem !important; /* 选项文字加大 */
+        font-weight: 700 !important;
+        color: #37474f !important;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    div[role="radiogroup"] label:hover {
+        background-color: #e3f2fd;
+        border-color: #2196f3;
+    }
+
+    /* === 4. 右侧模块优化 (字体加大) === */
+    
+    /* 图例模块 - 字体再次加大 */
+    .reference-box {
+        background-color: #ffffff;
+        border: 2px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .ref-title {
+        font-weight: 900;
+        color: #37474f;
+        margin-bottom: 20px;
+        font-size: 1.6rem; /* 标题加大 */
+        border-bottom: 2px solid #f5f5f5;
+        padding-bottom: 10px;
+    }
+    .ref-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        font-size: 1.4rem; /* 内容加大 */
+        font-weight: 600;
+        color: #455a64;
+    }
+    .ref-dot {
+        width: 28px; 
+        height: 28px;
+        border-radius: 50%;
+        margin-right: 18px;
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,0.1);
+        flex-shrink: 0;
+    }
+
+    /* 占位符模块 - 高度拉满 */
     .placeholder-box {
         background-color: #f8f9fa; 
         border: 4px dashed #cfd8dc; 
@@ -98,58 +172,23 @@ st.markdown("""
         padding: 40px; 
         text-align: center; 
         color: #78909c;
-        min-height: 750px; /* 关键：强制高度加大，撑开右侧 */
+        min-height: 850px; /* 强制高度，撑开右侧 */
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        margin-top: 25px; /* 与上方图例拉开间距 */
-    }
-    
-    /* 图例模块 - 加大尺寸，放在上方 */
-    .reference-box {
-        background-color: #ffffff;
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-        padding: 25px 30px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-    }
-    .ref-title {
-        font-weight: 900;
-        color: #37474f;
-        margin-bottom: 15px;
-        font-size: 1.4rem; /* 加大 */
-        border-bottom: 2px solid #f5f5f5;
-        padding-bottom: 10px;
-    }
-    .ref-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 12px;
-        font-size: 1.25rem; /* 加大 */
-        font-weight: 500;
-        color: #455a64;
-    }
-    .ref-dot {
-        width: 24px; /* 加大 */
-        height: 24px;
-        border-radius: 50%;
-        margin-right: 15px;
-        display: inline-block;
-        border: 1px solid rgba(0,0,0,0.1);
-        flex-shrink: 0;
+        margin-top: 30px;
     }
 
-    /* === 4. 风险卡片配色 === */
+    /* === 5. 风险卡片配色 === */
     .risk-card-low { 
-        background-color: #e8f5e9; color: #1b5e20; border: 4px solid #2e7d32;
+        background-color: #e8f5e9; color: #1b5e20; border: 5px solid #2e7d32;
     }
-    /* 香蕉黄风格 */
     .risk-card-mid { 
-        background-color: #FFF9C4; color: #212121; border: 4px solid #FBC02D;
+        background-color: #FFF9C4; color: #212121; border: 5px solid #FBC02D;
     }
     .risk-card-high { 
-        background-color: #ffebee; color: #b71c1c; border: 4px solid #c62828;
+        background-color: #ffebee; color: #b71c1c; border: 5px solid #c62828;
     }
 
     /* 临床建议框 */
@@ -160,44 +199,35 @@ st.markdown("""
         padding: 30px;
         border-radius: 6px;
         margin-top: 25px;
-        font-size: 1.2rem; /* 加大 */
+        font-size: 1.3rem; 
     }
 
-    /* === 5. 输入框字体超级增强 === */
+    /* === 6. 输入框字体超级增强 === */
     .stNumberInput label {
-        font-size: 1.5rem !important;  /* 字体极大 */
-        font-weight: 900 !important;    /* 极粗 */
-        color: #000000 !important;      /* 纯黑 */
+        font-size: 1.5rem !important;  
+        font-weight: 900 !important;    
+        color: #000000 !important;      
         margin-bottom: 10px !important;
-        letter-spacing: 0.5px;
     }
     .stNumberInput input {
-        font-size: 1.25rem;
+        font-size: 1.3rem;
         color: #000;
         font-weight: 500;
+        padding: 10px;
     }
-    /* 单选按钮字体加大 */
-    .stRadio label {
-        font-size: 1.3rem !important;
-        color: #212121 !important;
-        font-weight: 500 !important;
-    }
-    .stRadio div[role='radiogroup'] {
-        gap: 15px;
-    }
-    
+
     /* 按钮样式 */
     div.stButton > button:first-child {
         background: #1565c0;
         color: white;
-        font-size: 1.5rem; /* 按钮字加大 */
-        height: 3.5em;
+        font-size: 1.6rem; 
+        height: 4em;
         border-radius: 12px;
         border: none;
         width: 100%;
         font-weight: 900;
         box-shadow: 0 6px 12px rgba(21, 101, 192, 0.25);
-        margin-top: 25px;
+        margin-top: 30px;
     }
     div.stButton > button:first-child:hover {
         background: #0d47a1;
@@ -254,7 +284,6 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
         except:
             pass
     if df is None:
-        # DEMO DATA
         data = {
             "Variable": [
                 "Age (years)", "APSIII_score (pts)", "BUN (mg/dL)", 
@@ -373,16 +402,15 @@ rules_df = load_rules()
 col_inputs, col_results = st.columns([1.1, 0.9], gap="large")
 
 # ================================
-# 左侧：配置与输入 (Configuration)
+# 左侧：Configuration & Inputs
 # ================================
 with col_inputs:
-    # 开始卡片容器
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
-    # 1. Subgroup
-    st.markdown("##### 1. Patient Subgroup Profile")
+    # 1. Subgroup (2x2 排列，CSS实现)
+    st.markdown('<div class="subgroup-title">1. Patient Subgroup Profile</div>', unsafe_allow_html=True)
     selected_group_label = st.radio(
         "Select profile:",
         options=list(GROUP_MAPPING.keys()),
@@ -393,7 +421,7 @@ with col_inputs:
     current_group_vars = rules_df[rules_df["Group"] == selected_group]["Variable"].unique()
     
     st.markdown("---")
-    st.markdown("##### 2. Clinical Variables")
+    st.markdown('<div class="subgroup-title" style="margin-top:20px;">2. Clinical Variables</div>', unsafe_allow_html=True)
     st.caption("Enter the latest clinical values within the first 24 hours.")
     
     # 2. 输入表单
@@ -424,7 +452,7 @@ with col_inputs:
     st.markdown('</div>', unsafe_allow_html=True) # 结束卡片
 
 # ================================
-# 右侧：结果展示 & 布局互换
+# 右侧：结果展示 (Top: Reference, Bottom: Placeholder/Result)
 # ================================
 with col_results:
     if submitted:
@@ -464,56 +492,7 @@ with col_results:
             * **Source Control:** Urgent surgical consult within 1 hour.
             """
 
-        # 1. 结果大卡片
-        st.markdown(f"""
-        <div class="card-container {risk_class}" style="text-align: center;">
-            <div style="font-size: 1.2rem; font-weight: 700; opacity: 0.8; letter-spacing: 1px;">PREDICTED 7-DAY MORTALITY</div>
-            <div style="font-size: 2.2rem; font-weight: 900; margin: 15px 0; color: inherit;">{risk_label}</div>
-            <div style="font-size: 5.5rem; font-weight: 900; line-height: 1; margin-bottom: 20px;">{prob_percent:.1f}%</div>
-            <div style="background: rgba(255,255,255,0.4); display: inline-block; padding: 10px 25px; border-radius: 30px; font-weight: bold; font-size: 1.4rem;">
-                SHScore: {score} pts
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # 2. 详细建议
-        st.markdown(f"""
-        <div class="protocol-box">
-            <h5 style="color: {color_hex}; margin-top:0; font-weight:900;">📋 Clinical Management Guide</h5>
-            {protocol}
-        </div>
-        """, unsafe_allow_html=True)
-
-        # 3. 动态仪表盘 (移到底部)
-        fig = go.Figure(go.Indicator(
-            mode = "gauge+number",
-            value = score,
-            domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "Risk Severity Gauge", 'font': {'size': 20, 'color': "#555", 'weight': 'bold'}},
-            number = {'suffix': " pts", 'font': {'color': color_hex, 'weight': 'bold', 'size': 24}},
-            gauge = {
-                'axis': {'range': [None, 80], 'tickwidth': 1, 'tickcolor': "#333"}, 
-                'bar': {'color': color_hex, 'thickness': 0.25},
-                'bgcolor': "white",
-                'borderwidth': 0,
-                'steps': [
-                    {'range': [0, 20], 'color': '#a5d6a7'},  # 浅绿
-                    {'range': [20, 35], 'color': '#FFF59D'}, # 浅香蕉黄
-                    {'range': [35, 80], 'color': '#ef9a9a'}  # 浅红
-                ],
-                'threshold': {
-                    'line': {'color': "black", 'width': 3},
-                    'thickness': 0.8,
-                    'value': score
-                }
-            }))
-        fig.update_layout(height=220, margin=dict(l=30, r=30, t=30, b=10))
-        st.plotly_chart(fig, use_container_width=True)
-
-    else:
-        # === 布局互换：Risk Reference 在上，Ready to Calculate 在下 ===
-        
-        # 1. Risk Reference (图例模块) - 放在顶部
+        # 1. 风险图例 (置顶)
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation</div>
@@ -523,12 +502,74 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # 2. Ready to Calculate (占位符模块) - 放在底部，且加高
+        st.markdown("<br>", unsafe_allow_html=True)
+
+        # 2. 结果大卡片
+        st.markdown(f"""
+        <div class="card-container {risk_class}" style="text-align: center;">
+            <div style="font-size: 1.3rem; font-weight: 700; opacity: 0.8; letter-spacing: 1px;">PREDICTED 7-DAY MORTALITY</div>
+            <div style="font-size: 2.5rem; font-weight: 900; margin: 15px 0; color: inherit;">{risk_label}</div>
+            <div style="font-size: 6rem; font-weight: 900; line-height: 1; margin-bottom: 25px;">{prob_percent:.1f}%</div>
+            <div style="background: rgba(255,255,255,0.4); display: inline-block; padding: 10px 30px; border-radius: 40px; font-weight: bold; font-size: 1.5rem;">
+                SHScore: {score} pts
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # 3. 详细建议
+        st.markdown(f"""
+        <div class="protocol-box">
+            <h5 style="color: {color_hex}; margin-top:0; font-weight:900;">📋 Clinical Management Guide</h5>
+            {protocol}
+        </div>
+        """, unsafe_allow_html=True)
+
+        # 4. 动态仪表盘
+        st.markdown("<br>", unsafe_allow_html=True)
+        fig = go.Figure(go.Indicator(
+            mode = "gauge+number",
+            value = score,
+            domain = {'x': [0, 1], 'y': [0, 1]},
+            title = {'text': "Risk Severity Gauge", 'font': {'size': 24, 'color': "#555", 'weight': 'bold'}},
+            number = {'suffix': " pts", 'font': {'color': color_hex, 'weight': 'bold', 'size': 30}},
+            gauge = {
+                'axis': {'range': [None, 80], 'tickwidth': 1, 'tickcolor': "#333"}, 
+                'bar': {'color': color_hex, 'thickness': 0.25},
+                'bgcolor': "white",
+                'borderwidth': 0,
+                'steps': [
+                    {'range': [0, 20], 'color': '#a5d6a7'},
+                    {'range': [20, 35], 'color': '#FFF59D'},
+                    {'range': [35, 80], 'color': '#ef9a9a'}
+                ],
+                'threshold': {
+                    'line': {'color': "black", 'width': 3},
+                    'thickness': 0.8,
+                    'value': score
+                }
+            }))
+        fig.update_layout(height=250, margin=dict(l=30, r=30, t=30, b=10))
+        st.plotly_chart(fig, use_container_width=True)
+
+    else:
+        # === 初始状态：图例在上，占位符在下 ===
+        
+        # 1. Risk Reference (图例模块)
+        st.markdown("""
+        <div class="reference-box">
+            <div class="ref-title">🚦 Risk Score Interpretation</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 20 pts:</b>&nbsp; Low Risk</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>20 - 35 pts:</b>&nbsp; Intermediate Risk</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 35 pts:</b>&nbsp; High Risk</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # 2. Ready to Calculate (占位符模块) - 高度拉满
         st.markdown("""
         <div class="placeholder-box">
-            <div style="font-size: 5rem; margin-bottom: 20px;">👈</div>
-            <h2 style="margin:0; font-weight:900; color:#546e7a; font-size: 2.2rem;">Ready to Calculate</h2>
-            <p style="margin-top: 20px; font-size:1.3rem; max-width:80%;">
+            <div style="font-size: 6rem; margin-bottom: 25px;">👈</div>
+            <h2 style="margin:0; font-weight:900; color:#546e7a; font-size: 2.5rem;">Ready to Calculate</h2>
+            <p style="margin-top: 25px; font-size:1.4rem; max-width:85%;">
                 Please enter the patient's clinical data in the left <b>Configuration</b> panel to generate a precision risk assessment.
             </p>
         </div>
