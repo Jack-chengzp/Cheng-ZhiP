@@ -5,17 +5,17 @@ import re
 import os
 
 # ==========================================
-# 1. 页面配置
+# 1. Page Configuration
 # ==========================================
 st.set_page_config(
-    page_title="脓毒症风险评估系统",
-    page_icon="🏥",
+    page_title="Sepsis Heterogeneity Score (SHScore)", # Changed back to English
+    page_icon="🩺",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # ==========================================
-# 2. 终极 CSS 样式 (V9.0)
+# 2. Ultimate CSS Styling (V10.0)
 # ==========================================
 st.markdown("""
 <style>
@@ -25,18 +25,18 @@ st.markdown("""
         font-family: 'Roboto', sans-serif;
     }
 
-    /* === 顶部布局修正 === */
+    /* === Top Spacing Fix === */
     .block-container {
         padding-top: 3rem !important; 
         padding-bottom: 5rem !important;
         max-width: 98% !important;
     }
 
-    /* === [核心] 绿色计算按钮 (最高权重) === */
+    /* === [CORE FIX] Green Calculate Button (Highest Priority) === */
     html body div.stButton > button {
-        background-color: #2e7d32 !important; 
+        background-color: #2e7d32 !important; /* Vivid Green */
         background-image: none !important;    
-        color: #ffffff !important;            
+        color: #ffffff !important;            /* White Text */
         border: 3px solid #1b5e20 !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
         font-size: 2.2rem !important;         
@@ -50,6 +50,7 @@ st.markdown("""
         justify-content: center !important;
         align-items: center !important;
     }
+    
     html body div.stButton > button:hover {
         background-color: #1b5e20 !important;
         color: white !important;
@@ -62,13 +63,16 @@ st.markdown("""
         color: white !important;
     }
 
-    /* === 字体强制扩大 (24px) === */
+    /* === Font Size Forcing (24px / 2.0rem) === */
+    
+    /* About Text */
     .about-text {
         font-size: 24px !important;
         line-height: 1.6 !important;
         color: #37474f !important;
     }
     
+    /* Radio Button Options */
     div[role="radiogroup"] label p {
         font-size: 24px !important;
         font-weight: 600 !important;
@@ -81,6 +85,7 @@ st.markdown("""
         border-radius: 10px;
     }
 
+    /* Input Field Labels */
     div[data-testid="stNumberInput"] label p {
         font-size: 24px !important;
         font-weight: 900 !important;
@@ -91,7 +96,7 @@ st.markdown("""
         min-height: 50px !important;
     }
 
-    /* === 标题与模块 === */
+    /* === Titles === */
     .main-title {
         color: #1565c0; font-weight: 900; font-size: 3.5rem; line-height: 1.2; margin-bottom: 10px;
     }
@@ -106,7 +111,7 @@ st.markdown("""
         font-size: 2.2rem; font-weight: 900; color: #000; margin-bottom: 15px;
     }
 
-    /* === 容器 === */
+    /* === Containers === */
     .card-container {
         background-color: #ffffff; padding: 40px; border-radius: 20px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;
@@ -119,7 +124,7 @@ st.markdown("""
         font-size: 2.4rem; font-weight: 900; color: #0d47a1; margin-bottom: 15px;
     }
 
-    /* === 右侧模块 === */
+    /* === Right Side Modules === */
     .reference-box {
         background-color: white; border: 3px solid #eee; border-radius: 15px;
         padding: 25px; margin-bottom: 25px;
@@ -155,7 +160,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. 核心逻辑
+# 3. Core Logic & Data
 # ==========================================
 VAR_META = {
     "Age": {"unit": "years", "full": "Age"},
@@ -260,12 +265,13 @@ def calculate_score(user_inputs, rules_df, selected_group):
     return total_score, prob, details
 
 # ==========================================
-# 4. 主界面布局
+# 4. Main Interface Layout
 # ==========================================
-st.markdown('<div class="main-title">脓毒症风险评估系统</div>', unsafe_allow_html=True)
+# [CHANGED BACK TO ENGLISH]
+st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-# --- About ---
+# --- About SHScore ---
 st.markdown("""
 <div class="about-box">
     <div class="about-title">📘 About SHScore</div>
@@ -280,7 +286,7 @@ st.markdown("""
 rules_df = load_rules()
 col_inputs, col_results = st.columns([1.1, 0.9], gap="large")
 
-# === 左侧输入 ===
+# === Left Column: Inputs ===
 with col_inputs:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
@@ -309,17 +315,17 @@ with col_inputs:
                 user_inputs[clean_name] = st.number_input(label, value=None, placeholder="--", step=0.1, key=f"in_{clean_name}")
         
         st.markdown("<br>", unsafe_allow_html=True)
-        # 绿色 2.2rem 按钮
+        # Green Button (Force styled by CSS)
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# === 右侧结果 ===
+# === Right Column: Results ===
 with col_results:
     if submitted:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
-        # [逻辑变更] 按照预测死亡率划分 (Predicted Mortality)
+        # Risk Logic based on Mortality Rate (Predicted Mortality)
         if prob_percent < 10:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
@@ -345,7 +351,7 @@ with col_results:
 - **Source Control:** Urgent surgical consult within 1 hour.
 """
 
-        # 1. 风险图例 (显示死亡率阈值，而非分数)
+        # 1. Risk Interpretation Legend (Mortality based)
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation (By Mortality Rate)</div>
@@ -355,7 +361,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
 
-        # 2. 风险结果卡片
+        # 2. Risk Result Card
         st.markdown(f"""
         <div class="risk-result-card {risk_class}">
             <div style="font-size: 1.6rem; font-weight: 700; opacity: 0.8;">PREDICTED 7-DAY MORTALITY</div>
@@ -367,7 +373,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # 3. 临床建议 (Markdown 渲染)
+        # 3. Clinical Management Guide (Markdown List)
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
@@ -377,7 +383,7 @@ with col_results:
         """, unsafe_allow_html=True)
         st.markdown(protocol_list)
 
-        # 4. 异常指标列表
+        # 4. Abnormal Risk Factors
         st.markdown(f"""
         <div class="breakdown-box" style="border-left-color: {color_hex};">
             <div style="color: {color_hex}; font-weight: 900; font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
@@ -397,7 +403,7 @@ with col_results:
             st.success("✅ All clinical indicators are within the baseline range. (Score: 0)")
 
     else:
-        # 初始状态
+        # Initial Placeholder State
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation</div>
