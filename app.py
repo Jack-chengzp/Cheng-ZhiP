@@ -15,11 +15,11 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. 终极 CSS 注入
+# 2. 终极强力 CSS (使用 px 强制大小)
 # ==========================================
 st.markdown("""
 <style>
-    @import url('https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Roboto:wght@400;500;700;900&display=swap');
+    @import url('https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Roboto:wght@400;700;900&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Roboto', sans-serif;
@@ -27,62 +27,68 @@ st.markdown("""
 
     /* === 0. 顶部间距修复 === */
     .block-container {
-        padding-top: 5rem !important; 
+        padding-top: 3rem !important; 
         padding-bottom: 5rem !important;
         max-width: 95% !important;
     }
 
-    /* === 1. [核心修复] 单选按钮选项字体 === */
-    div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] p {
-        font-size: 2.2rem !important; 
-        font-weight: 700 !important;  
-        line-height: 1.2 !important;
-        color: #37474f !important;
-    }
-    
-    div[role="radiogroup"] label {
-        padding: 25px 20px !important;
-        background-color: #f8f9fa;
-        border: 2px solid #e0e0e0;
-        border-radius: 12px;
-    }
-    div[role="radiogroup"] label[data-checked="true"] {
-        background-color: #e3f2fd !important;
-        border-color: #1565c0 !important;
-    }
-
-    /* === 2. [核心修复] 超大绿色计算按钮 === */
+    /* === 1. [修复] 绿色计算按钮 (超级醒目版) === */
+    /* 针对按钮容器 */
     div.stButton > button {
-        background-image: none !important;
-        background-color: #2e7d32 !important; /* 鲜艳绿 */
+        background-color: #2e7d32 !important; /* 强制森林绿 */
+        background-image: none !important;    /* 去除渐变 */
         color: white !important;
-        border: 2px solid #1b5e20 !important;
-        box-shadow: 0 6px 15px rgba(46, 125, 50, 0.4) !important;
-        font-size: 2.5rem !important; /* 字体加大到 2.5rem */
-        font-weight: 900 !important;
-        padding: 25px 40px !important; /* 内边距加大 */
-        min-height: 100px !important;  /* 按钮高度加大 */
+        border: 3px solid #1b5e20 !important;
+        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.5) !important;
+        padding: 25px 10px !important;
+        min-height: 110px !important;         /* 强制高度 */
         border-radius: 20px !important;
         width: 100% !important;
-        transition: all 0.2s !important;
         margin-top: 40px !important;
+        transition: transform 0.1s !important;
+    }
+    
+    /* 按钮内的文字/图标强制放大 */
+    div.stButton > button p {
+        font-size: 40px !important; /* 字体 40px */
+        font-weight: 900 !important;
+        color: white !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     div.stButton > button:hover {
-        background-color: #1b5e20 !important; /* 悬停深绿 */
-        color: #ffffff !important;
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(46, 125, 50, 0.6) !important;
+        background-color: #1b5e20 !important;
+        transform: scale(1.02);
     }
-    
-    div.stButton > button p {
-        font-size: 2.5rem !important;
-        font-weight: 900 !important;
+    div.stButton > button:active {
+        background-color: #004d40 !important;
+        border-color: transparent !important;
+        color: white !important;
     }
 
-    /* === 3. 变量名 (2.2rem 极粗) === */
+    /* === 2. [修复] Subgroup 选项字体 (强制 30px) === */
+    /* 穿透 Streamlit 的层级结构 */
+    div[role="radiogroup"] label p {
+        font-size: 30px !important; 
+        font-weight: 700 !important;  
+        color: #263238 !important;
+    }
+    div[role="radiogroup"] label {
+        padding: 30px 20px !important;
+        background-color: #f8f9fa;
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+    }
+    /* 选中状态 */
+    div[role="radiogroup"] label[data-checked="true"] {
+        background-color: #e8f5e9 !important;
+        border-color: #2e7d32 !important;
+    }
+
+    /* === 3. 变量名 (输入框标签 32px) === */
     .stNumberInput label p {
-        font-size: 2.2rem !important;
+        font-size: 32px !important;
         font-weight: 900 !important;
         color: #000000 !important;
     }
@@ -90,9 +96,9 @@ st.markdown("""
         margin-bottom: 15px !important;
     }
     .stNumberInput input {
-        font-size: 1.6rem !important;
+        font-size: 24px !important; /* 输入数值的大小 */
         font-weight: 500;
-        min-height: 4rem !important; 
+        min-height: 60px !important; 
         padding: 10px !important;
     }
 
@@ -100,32 +106,32 @@ st.markdown("""
     .main-title {
         color: #1565c0; 
         font-weight: 900;
-        font-size: 3.5rem; 
+        font-size: 60px; 
         line-height: 1.1;
         margin-bottom: 10px;
     }
     .sub-title {
         color: #546e7a;
-        font-size: 1.6rem; 
+        font-size: 24px; 
         margin-bottom: 40px;
     }
 
     /* 纯文本介绍区域 */
     .about-text-container {
         margin-bottom: 50px;
-        padding: 25px;
+        padding: 30px;
         background-color: #f8fdff;
-        border-left: 12px solid #1565c0;
-        border-radius: 8px;
+        border-left: 15px solid #1565c0;
+        border-radius: 10px;
     }
     .about-title {
         font-weight: 900;
         color: #0d47a1;
-        font-size: 2rem; 
+        font-size: 32px; 
         margin-bottom: 15px;
     }
     .about-text {
-        font-size: 1.4rem; 
+        font-size: 22px; 
         line-height: 1.6;
         color: #37474f;
     }
@@ -135,89 +141,99 @@ st.markdown("""
         background-color: white;
         border: 3px solid #eceff1;
         border-radius: 15px;
-        padding: 30px;
+        padding: 40px;
         margin-bottom: 30px;
     }
     .ref-title {
-        font-size: 2.2rem;
+        font-size: 32px;
         font-weight: 900;
         color: #37474f;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         border-bottom: 3px solid #eee;
+        padding-bottom: 10px;
     }
     .ref-item {
-        font-size: 1.8rem; 
+        font-size: 26px; 
         font-weight: 600;
         color: #455a64;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
         display: flex;
         align-items: center;
     }
     .ref-dot {
-        width: 35px; height: 35px; border-radius: 50%; 
-        margin-right: 20px; display: inline-block;
+        width: 40px; height: 40px; border-radius: 50%; 
+        margin-right: 25px; display: inline-block;
     }
 
     .placeholder-box {
         background-color: #f1f8e9; 
-        border: 5px dashed #a5d6a7; 
+        border: 6px dashed #a5d6a7; 
         border-radius: 20px; 
-        padding: 60px 40px; 
+        padding: 80px 40px; 
         text-align: center; 
         color: #558b2f;
-        min-height: 900px; 
+        min-height: 1000px; 
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        margin-top: 35px;
+        margin-top: 40px;
     }
 
     /* === 6. Configuration 标题 === */
     .section-header {
-        font-size: 2.5rem;
+        font-size: 40px;
         font-weight: 900;
         color: #1a237e;
-        border-bottom: 5px solid #e8eaf6;
+        border-bottom: 6px solid #e8eaf6;
         padding-bottom: 20px;
-        margin-bottom: 30px;
+        margin-bottom: 40px;
     }
     .subgroup-title {
-        font-size: 2.2rem;
+        font-size: 32px;
         font-weight: 900;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         color: #000;
     }
 
     .card-container {
         background-color: #ffffff;
-        padding: 40px; 
-        border-radius: 20px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+        padding: 50px; 
+        border-radius: 25px;
+        box-shadow: 0 5px 30px rgba(0,0,0,0.05);
         border: 1px solid #e0e0e0;
     }
 
     div[role="radiogroup"] {
         display: grid;
         grid-template-columns: 1fr 1fr; 
-        gap: 20px;
+        gap: 30px;
     }
 
     /* 结果卡片 */
-    .risk-card-low { background:#e8f5e9; color:#1b5e20; border:6px solid #2e7d32; }
-    .risk-card-mid { background:#fff9c4; color:#000; border:6px solid #fbc02d; }
-    .risk-card-high { background:#ffebee; color:#b71c1c; border:6px solid #c62828; }
+    .risk-card-low { background:#e8f5e9; color:#1b5e20; border:8px solid #2e7d32; }
+    .risk-card-mid { background:#fff9c4; color:#000; border:8px solid #fbc02d; }
+    .risk-card-high { background:#ffebee; color:#b71c1c; border:8px solid #c62828; }
 
-    /* === 7. 异常指标解释框 === */
+    /* === 7. [修复] 异常指标解释框 HTML 渲染 === */
     .breakdown-box {
         background-color: #ffffff;
         border: 2px solid #e0e0e0;
-        border-left-width: 12px; 
-        padding: 35px;
-        border-radius: 12px;
-        margin-top: 30px;
-        font-size: 1.5rem; 
+        border-left-width: 15px; 
+        padding: 40px;
+        border-radius: 15px;
+        margin-top: 40px;
+        font-size: 24px; 
         box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+    /* 列表项样式 */
+    .abnormal-li {
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -394,20 +410,21 @@ with col_results:
         else:
             risk_class = "risk-card-high"; risk_label = "HIGH RISK (SEPSIS SHOCK)"; color_hex = "#c62828"
 
-        # 生成异常指标 HTML
+        # [修复] 构造异常指标 HTML，并确保正确渲染
+        abnormal_html_content = ""
         if details:
-            abnormal_items = ""
             for d in details:
-                abnormal_items += f"""
-                <li style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
-                    <span style="font-weight:900; color:#333;">{d['var']}</span> 
-                    <span style="color:#666;">(Value: {d['val']})</span>
-                    <span style="float:right; font-weight:900; color:{color_hex};">+{d['points']} pts</span>
-                </li>
+                abnormal_html_content += f"""
+                <div class="abnormal-li">
+                    <div>
+                        <span style="font-weight:900; color:#333; font-size:24px;">{d['var']}</span> 
+                        <span style="color:#666; font-size:20px; margin-left:10px;">(Value: {d['val']})</span>
+                    </div>
+                    <div style="font-weight:900; color:{color_hex}; font-size:24px;">+{d['points']} pts</div>
+                </div>
                 """
-            abnormal_html = f"<ul style='list-style:none; padding-left:0; margin:0;'>{abnormal_items}</ul>"
         else:
-            abnormal_html = f"<div style='color:#2e7d32; font-weight:bold; font-size:1.6rem;'>✅ All clinical indicators are within the baseline range. (Score: 0)</div>"
+            abnormal_html_content = f"<div style='color:#2e7d32; font-weight:bold; font-size:24px;'>✅ All clinical indicators are within the baseline range. (Score: 0)</div>"
 
         # Risk Reference (Top)
         st.markdown("""
@@ -423,24 +440,22 @@ with col_results:
         # Result Card
         st.markdown(f"""
         <div class="card-container {risk_class}" style="text-align: center; padding: 50px;">
-            <div style="font-size: 1.8rem; font-weight: 700; opacity: 0.8;">PREDICTED 7-DAY MORTALITY</div>
-            <div style="font-size: 3.5rem; font-weight: 900; margin: 20px 0; color: {color_hex};">{risk_label}</div>
-            <div style="font-size: 8rem; font-weight: 900; line-height: 1; margin-bottom: 30px;">{prob_percent:.1f}%</div>
-            <div style="background: rgba(255,255,255,0.6); display: inline-block; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 2rem;">
+            <div style="font-size: 24px; font-weight: 700; opacity: 0.8;">PREDICTED 7-DAY MORTALITY</div>
+            <div style="font-size: 50px; font-weight: 900; margin: 20px 0; color: {color_hex};">{risk_label}</div>
+            <div style="font-size: 100px; font-weight: 900; line-height: 1; margin-bottom: 30px;">{prob_percent:.1f}%</div>
+            <div style="background: rgba(255,255,255,0.6); display: inline-block; padding: 15px 40px; border-radius: 50px; font-weight: bold; font-size: 30px;">
                 SHScore: {score} pts
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # [替换] 异常指标解释框 (Abnormal Indicators Breakdown)
+        # [修复] 异常指标解释框 - 确保渲染 HTML
         st.markdown(f"""
         <div class="breakdown-box" style="border-left-color: {color_hex};">
-            <div style="color: {color_hex}; font-weight: 900; font-size: 2rem; margin-bottom: 20px;">
+            <div style="color: {color_hex}; font-weight: 900; font-size: 32px; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom:10px;">
                 🔍 Abnormal Risk Factors
             </div>
-            <div style="font-size: 1.5rem; color: #455a64; line-height: 1.6;">
-                {abnormal_html}
-            </div>
+            {abnormal_html_content}
         </div>
         """, unsafe_allow_html=True)
 
@@ -457,9 +472,9 @@ with col_results:
         
         st.markdown("""
         <div class="placeholder-box">
-            <div style="font-size: 8rem; margin-bottom: 30px;">👈</div>
-            <h2 style="margin:0; font-weight:900; color:#558b2f; font-size: 3.5rem;">Ready to Calculate</h2>
-            <p style="margin-top: 30px; font-size:1.8rem; max-width:80%;">
+            <div style="font-size: 120px; margin-bottom: 30px;">👈</div>
+            <h2 style="margin:0; font-weight:900; color:#558b2f; font-size: 50px;">Ready to Calculate</h2>
+            <p style="margin-top: 30px; font-size:28px; max-width:80%;">
                 Please enter clinical data in the <b>Configuration</b> panel to begin.
             </p>
         </div>
