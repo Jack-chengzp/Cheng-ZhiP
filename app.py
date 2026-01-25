@@ -8,14 +8,14 @@ import os
 # 1. 页面配置
 # ==========================================
 st.set_page_config(
-    page_title="Sepsis Heterogeneity Score (SHScore)",
-    page_icon="🩺",
+    page_title="脓毒症风险评估系统",
+    page_icon="🏥",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
 # ==========================================
-# 2. 终极 CSS 样式 (V6.0 权重增强版)
+# 2. 终极 CSS 样式 (V9.0)
 # ==========================================
 st.markdown("""
 <style>
@@ -25,22 +25,21 @@ st.markdown("""
         font-family: 'Roboto', sans-serif;
     }
 
-    /* === 0. 顶部布局修正 === */
+    /* === 顶部布局修正 === */
     .block-container {
         padding-top: 3rem !important; 
         padding-bottom: 5rem !important;
         max-width: 98% !important;
     }
 
-    /* === 1. [终极修复] 绿色计算按钮 === */
-    /* 使用 html body 前缀增加权重，确保覆盖 Streamlit 默认样式 */
+    /* === [核心] 绿色计算按钮 (最高权重) === */
     html body div.stButton > button {
-        background-color: #2e7d32 !important; /* 强制鲜艳绿 */
-        background-image: none !important;    /* 去除渐变 */
-        color: #ffffff !important;            /* 白色文字 */
+        background-color: #2e7d32 !important; 
+        background-image: none !important;    
+        color: #ffffff !important;            
         border: 3px solid #1b5e20 !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-        font-size: 2.2rem !important;         /* 强制 2.2rem */
+        font-size: 2.2rem !important;         
         font-weight: 900 !important;
         padding: 20px 0 !important;
         min-height: 90px !important;
@@ -51,37 +50,30 @@ st.markdown("""
         justify-content: center !important;
         align-items: center !important;
     }
-    
-    /* 悬停效果 */
     html body div.stButton > button:hover {
         background-color: #1b5e20 !important;
         color: white !important;
         border-color: #004d40 !important;
         transform: scale(1.02);
     }
-    /* 按钮内文字大小强制 */
     html body div.stButton > button p {
         font-size: 2.2rem !important;
         font-weight: 900 !important;
         color: white !important;
     }
 
-    /* === 2. [修复] 字体扩大 (About & Configuration) === */
-    
-    /* (1) 关于 SHScore 的文本容器 */
-    .about-box-content {
-        font-size: 24px !important; /* 强制 2.0rem */
+    /* === 字体强制扩大 (24px) === */
+    .about-text {
+        font-size: 24px !important;
         line-height: 1.6 !important;
         color: #37474f !important;
     }
     
-    /* (2) Patient Subgroup 选项文字 (单选框) */
     div[role="radiogroup"] label p {
-        font-size: 24px !important; /* 强制 2.0rem */
+        font-size: 24px !important;
         font-weight: 600 !important;
         color: #263238 !important;
     }
-    /* 单选框容器调整 */
     div[role="radiogroup"] label {
         padding: 20px !important;
         background: #f8f9fa;
@@ -89,113 +81,71 @@ st.markdown("""
         border-radius: 10px;
     }
 
-    /* (3) Clinical Variables 输入框标签 */
     div[data-testid="stNumberInput"] label p {
-        font-size: 24px !important; /* 强制 2.0rem */
+        font-size: 24px !important;
         font-weight: 900 !important;
         color: #000000 !important;
     }
-    /* 输入框内数值大小 */
     div[data-testid="stNumberInput"] input {
         font-size: 20px !important;
         min-height: 50px !important;
     }
 
-    /* === 3. 标题样式 === */
+    /* === 标题与模块 === */
     .main-title {
-        color: #1565c0; 
-        font-weight: 900;
-        font-size: 3.5rem; 
-        line-height: 1.2;
-        margin-bottom: 10px;
+        color: #1565c0; font-weight: 900; font-size: 3.5rem; line-height: 1.2; margin-bottom: 10px;
     }
     .sub-title {
-        color: #546e7a;
-        font-size: 1.8rem; 
-        margin-bottom: 30px;
+        color: #546e7a; font-size: 1.8rem; margin-bottom: 30px;
     }
-    
-    /* === 4. 模块标题 === */
     .section-header {
-        font-size: 2.4rem; 
-        font-weight: 900;
-        color: #1a237e;
-        border-bottom: 4px solid #eceff1;
-        padding-bottom: 15px;
-        margin-bottom: 25px;
+        font-size: 2.4rem; font-weight: 900; color: #1a237e;
+        border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px;
     }
     .subgroup-title {
-        font-size: 2.2rem;
-        font-weight: 900;
-        color: #000;
-        margin-bottom: 15px;
+        font-size: 2.2rem; font-weight: 900; color: #000; margin-bottom: 15px;
     }
 
-    /* === 5. 容器样式 === */
+    /* === 容器 === */
     .card-container {
-        background-color: #ffffff;
-        padding: 40px; 
-        border-radius: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid #e0e0e0;
+        background-color: #ffffff; padding: 40px; border-radius: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0;
     }
-    
     .about-box {
-        background-color: #e3f2fd;
-        border-left: 12px solid #1565c0;
-        padding: 30px;
-        border-radius: 12px;
-        margin-bottom: 40px;
+        background-color: #e3f2fd; border-left: 12px solid #1565c0;
+        padding: 30px; border-radius: 12px; margin-bottom: 40px;
     }
     .about-title {
-        font-size: 2.4rem; 
-        font-weight: 900;
-        color: #0d47a1;
-        margin-bottom: 15px;
+        font-size: 2.4rem; font-weight: 900; color: #0d47a1; margin-bottom: 15px;
     }
 
-    /* === 6. 右侧结果模块 === */
+    /* === 右侧模块 === */
     .reference-box {
-        background-color: white;
-        border: 3px solid #eee;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 25px;
+        background-color: white; border: 3px solid #eee; border-radius: 15px;
+        padding: 25px; margin-bottom: 25px;
     }
     .ref-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 15px; border-bottom: 2px solid #eee; }
     .ref-item { font-size: 1.6rem; margin-bottom: 10px; display: flex; align-items: center; }
     .ref-dot { width: 25px; height: 25px; border-radius: 50%; margin-right: 15px; display: inline-block; }
 
-    /* 风险卡片 (缩小版) */
     .risk-result-card {
-        text-align: center;
-        padding: 30px;
-        border-radius: 20px;
-        margin-bottom: 25px;
+        text-align: center; padding: 30px; border-radius: 20px; margin-bottom: 25px;
     }
     .risk-card-low { background:#e8f5e9; color:#1b5e20; border:5px solid #2e7d32; }
     .risk-card-mid { background:#fff9c4; color:#000; border:5px solid #fbc02d; }
     .risk-card-high { background:#ffebee; color:#b71c1c; border:5px solid #c62828; }
 
-    /* 临床建议 */
     .protocol-box {
-        background-color: #fafafa;
-        border: 2px solid #e0e0e0;
-        border-left-width: 10px;
-        padding: 25px;
-        border-radius: 10px;
-        margin-bottom: 25px;
+        background-color: #fafafa; border: 2px solid #e0e0e0; border-left-width: 10px;
+        padding: 25px; border-radius: 10px; margin-bottom: 25px;
     }
     .protocol-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 10px; }
-    .protocol-text { font-size: 1.6rem; line-height: 1.6; }
-
-    /* 异常指标 */
+    
     .breakdown-box {
         background: white; border: 2px solid #eee; border-left-width: 10px;
-        border-radius: 10px; padding: 25px;
+        border-radius: 10px; padding: 25px; margin-top: 25px;
     }
     
-    /* 占位符 */
     .placeholder-box {
         background: #f1f8e9; border: 4px dashed #a5d6a7; border-radius: 20px;
         min-height: 800px; display: flex; flex-direction: column;
@@ -312,14 +262,14 @@ def calculate_score(user_inputs, rules_df, selected_group):
 # ==========================================
 # 4. 主界面布局
 # ==========================================
-st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">脓毒症风险评估系统</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-# --- 字体修正应用到 About 模块 ---
+# --- About ---
 st.markdown("""
 <div class="about-box">
     <div class="about-title">📘 About SHScore</div>
-    <div class="about-box-content">
+    <div class="about-text">
         The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool developed using the <b>MIMIC-IV</b> database and externally validated within the <b>eICU</b> Collaborative Research Database. 
         <br><br>
         Recognizing the <b>clinical heterogeneity</b> arising from different underlying comorbidities, this model was trained using <b>dynamic time-series data</b> to capture physiological fluctuations often missed by static snapshots. It is specifically designed to predict <b>short-term (7-day) mortality risk</b> across diverse sepsis phenotypes (e.g., Renal, Liver, Immunodeficiency), demonstrating <b>superior predictive performance</b> compared to traditional scoring systems like SOFA and APACHE II.
@@ -330,7 +280,7 @@ st.markdown("""
 rules_df = load_rules()
 col_inputs, col_results = st.columns([1.1, 0.9], gap="large")
 
-# === 左侧输入区 ===
+# === 左侧输入 ===
 with col_inputs:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
@@ -359,27 +309,26 @@ with col_inputs:
                 user_inputs[clean_name] = st.number_input(label, value=None, placeholder="--", step=0.1, key=f"in_{clean_name}")
         
         st.markdown("<br>", unsafe_allow_html=True)
-        # 绿色 2.2rem 按钮 (样式通过 html body div.stButton > button 强制覆盖)
+        # 绿色 2.2rem 按钮
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# === 右侧结果区 ===
+# === 右侧结果 ===
 with col_results:
     if submitted:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
-        # 定义风险等级
-        if score < 20:
+        # [逻辑变更] 按照预测死亡率划分 (Predicted Mortality)
+        if prob_percent < 10:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
-            # 修复乱码：使用 Markdown 列表
             protocol_list = """
 - **Monitoring:** Standard vital signs q4h.
 - **Fluids:** Maintain euvolemia. avoid fluid overload.
 - **Antibiotics:** De-escalate based on culture results.
 """
-        elif score <= 35:
+        elif prob_percent <= 30:
             risk_class = "risk-card-mid"; risk_label = "INTERMEDIATE RISK"; color_hex = "#FBC02D"
             protocol_title = "⚠️ Enhanced Surveillance Pathway"
             protocol_list = """
@@ -396,13 +345,13 @@ with col_results:
 - **Source Control:** Urgent surgical consult within 1 hour.
 """
 
-        # 1. 风险图例
+        # 1. 风险图例 (显示死亡率阈值，而非分数)
         st.markdown("""
         <div class="reference-box">
-            <div class="ref-title">🚦 Risk Score Interpretation</div>
-            <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 20 pts:</b>&nbsp; Low Risk</div>
-            <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>20 - 35 pts:</b>&nbsp; Intermediate Risk</div>
-            <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 35 pts:</b>&nbsp; High Risk</div>
+            <div class="ref-title">🚦 Risk Score Interpretation (By Mortality Rate)</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 10%:</b>&nbsp; Low Risk</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>10% - 30%:</b>&nbsp; Intermediate Risk</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 30%:</b>&nbsp; High Risk</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -418,7 +367,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # 3. [修复] 临床建议模块 (Markdown 渲染)
+        # 3. 临床建议 (Markdown 渲染)
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
@@ -426,12 +375,11 @@ with col_results:
             </div>
         </div>
         """, unsafe_allow_html=True)
-        # 将列表单独渲染以保证 Markdown 解析
         st.markdown(protocol_list)
 
         # 4. 异常指标列表
         st.markdown(f"""
-        <div class="breakdown-box" style="border-left-color: {color_hex}; margin-top: 25px;">
+        <div class="breakdown-box" style="border-left-color: {color_hex};">
             <div style="color: {color_hex}; font-weight: 900; font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
                 🔍 Abnormal Risk Factors
             </div>
@@ -453,9 +401,9 @@ with col_results:
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation</div>
-            <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 20 pts:</b>&nbsp; Low Risk</div>
-            <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>20 - 35 pts:</b>&nbsp; Intermediate Risk</div>
-            <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 35 pts:</b>&nbsp; High Risk</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 10%:</b>&nbsp; Low Risk (Mortality)</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>10% - 30%:</b>&nbsp; Intermediate Risk (Mortality)</div>
+            <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 30%:</b>&nbsp; High Risk (Mortality)</div>
         </div>
         """, unsafe_allow_html=True)
         
