@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 自定义 CSS 样式 - 终极加大修复版
+# 自定义 CSS 样式 - 绿色按钮 + 超大字体修复版
 st.markdown("""
 <style>
     @import url('https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Roboto:wght@400;500;700;900&display=swap');
@@ -26,9 +26,9 @@ st.markdown("""
         font-size: 18px;
     }
     
-    /* === 0. 核心修复：解决标题被遮挡问题 === */
+    /* === 0. 修复标题被遮挡问题 === */
     .block-container {
-        padding-top: 5rem !important; /* 给顶部留出足够空间显示标题 */
+        padding-top: 6rem !important; /* 顶部留出足够空间 */
         padding-bottom: 3rem !important;
         max-width: 95% !important;
     }
@@ -49,11 +49,11 @@ st.markdown("""
         margin-bottom: 3rem;
     }
 
-    /* === 2. 去除框框后的纯文本介绍 === */
+    /* === 2. 纯文本介绍 === */
     .about-text-container {
         margin-bottom: 40px;
-        padding-left: 10px;
-        border-left: 8px solid #1565c0; /* 仅保留左侧线条作为指引 */
+        padding-left: 15px;
+        border-left: 8px solid #1565c0; 
     }
     .about-title {
         font-weight: 900;
@@ -92,7 +92,6 @@ st.markdown("""
     }
 
     /* === 4. 变量名 (2.2rem 极粗) === */
-    /* 强制修改 Streamlit 输入框标签 */
     .stNumberInput label p {
         font-size: 2.2rem !important;
         font-weight: 900 !important;
@@ -101,39 +100,43 @@ st.markdown("""
     .stNumberInput label {
         margin-bottom: 15px !important;
     }
-    
-    /* 输入框本体加大 */
     .stNumberInput input {
         font-size: 1.5rem;
         font-weight: 500;
-        min-height: 3.5rem; /* 撑高输入框 */
-        padding-top: 10px;
-        padding-bottom: 10px;
+        min-height: 3.5rem; 
+        padding: 10px;
     }
 
-    /* === 5. Calculate 按钮 (2.2rem 极粗) === */
+    /* === 5. [重点修改] 绿色计算按钮 (2.2rem + 填充背景) === */
     div.stButton > button:first-child {
-        background: #1565c0;
-        color: white;
-        font-size: 2.2rem !important; /* 强制 2.2rem */
-        font-weight: 900 !important;  /* 强制加黑 */
+        background-color: #2e7d32 !important; /* 强制绿色背景 */
+        color: white !important;               /* 白色文字 */
+        font-size: 2.2rem !important;          /* 2.2rem 字号 */
+        font-weight: 900 !important;           /* 极粗 */
         height: auto;
-        min-height: 5rem; /* 按钮撑高 */
+        min-height: 5rem;
         border-radius: 15px;
-        border: none;
+        border: 2px solid #1b5e20;             /* 深绿边框 */
         width: 100%;
-        box-shadow: 0 8px 16px rgba(21, 101, 192, 0.25);
+        box-shadow: 0 8px 16px rgba(46, 125, 50, 0.3); /* 绿色阴影 */
         margin-top: 50px;
-        padding: 20px;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
     div.stButton > button:first-child:hover {
-        background: #0d47a1;
+        background-color: #1b5e20 !important; /* 悬停变深绿 */
+        border-color: #1b5e20 !important;
         transform: translateY(-3px);
+        color: white !important;
     }
-    /* 按钮内图标和文字间距 */
+    /* 修复按钮内图标文字对齐 */
     div.stButton > button:first-child p {
         font-size: 2.2rem !important;
         font-weight: 900 !important;
+        margin: 0;
+        padding: 0;
     }
 
     /* === 6. Subgroup 标题 === */
@@ -158,14 +161,13 @@ st.markdown("""
         border: 2px solid #e0e0e0;
         transition: all 0.2s;
     }
-    /* 选项文字加大 */
     div[role="radiogroup"] label p {
         font-size: 1.4rem !important;
         font-weight: 700 !important;
         color: #37474f !important;
     }
 
-    /* === 7. 右侧模块 (图例加大) === */
+    /* === 7. 右侧模块 === */
     .reference-box {
         background-color: #ffffff;
         border: 3px solid #e0e0e0;
@@ -199,7 +201,6 @@ st.markdown("""
         flex-shrink: 0;
     }
 
-    /* 占位符模块 */
     .placeholder-box {
         background-color: #f8f9fa; 
         border: 5px dashed #cfd8dc; 
@@ -379,7 +380,7 @@ def calculate_score(user_inputs, rules_df, selected_group):
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-# --- 文案 (去除框框，纯文字版) ---
+# --- 文案 (纯文本版) ---
 st.markdown("""
 <div class="about-text-container">
     <div class="about-title">📘 About SHScore</div>
@@ -443,13 +444,13 @@ with col_inputs:
                 )
         
         st.markdown("<br>", unsafe_allow_html=True)
-        # 按钮：字体2.2rem，超大
+        # 绿色按钮
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     
     st.markdown('</div>', unsafe_allow_html=True) # 结束卡片
 
 # ================================
-# 右侧：结果展示
+# 右侧：结果展示 (Top: Reference, Bottom: Placeholder/Result)
 # ================================
 with col_results:
     if submitted:
@@ -561,7 +562,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # 2. Ready to Calculate (占位符模块) - 高度900px，对齐左侧
+        # 2. Ready to Calculate (占位符模块) - 高度拉满
         st.markdown("""
         <div class="placeholder-box">
             <div style="font-size: 8rem; margin-bottom: 30px;">👈</div>
