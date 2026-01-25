@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. 终极 CSS 样式 (V5.0 修复版)
+# 2. 终极 CSS 样式 (V6.0 权重增强版)
 # ==========================================
 st.markdown("""
 <style>
@@ -32,9 +32,9 @@ st.markdown("""
         max-width: 98% !important;
     }
 
-    /* === 1. [修复] 绿色计算按钮 (最高权重覆盖) === */
-    /* 针对表单内的提交按钮，使用多层选择器增加权重 */
-    .stButton > button {
+    /* === 1. [终极修复] 绿色计算按钮 === */
+    /* 使用 html body 前缀增加权重，确保覆盖 Streamlit 默认样式 */
+    html body div.stButton > button {
         background-color: #2e7d32 !important; /* 强制鲜艳绿 */
         background-image: none !important;    /* 去除渐变 */
         color: #ffffff !important;            /* 白色文字 */
@@ -42,38 +42,42 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
         font-size: 2.2rem !important;         /* 强制 2.2rem */
         font-weight: 900 !important;
-        padding: 15px 0 !important;
-        min-height: 85px !important;
-        border-radius: 12px !important;
+        padding: 20px 0 !important;
+        min-height: 90px !important;
+        border-radius: 15px !important;
         width: 100% !important;
         margin-top: 30px !important;
-        display: block !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
     
     /* 悬停效果 */
-    .stButton > button:hover {
+    html body div.stButton > button:hover {
         background-color: #1b5e20 !important;
         color: white !important;
         border-color: #004d40 !important;
-        transform: scale(1.01);
+        transform: scale(1.02);
     }
     /* 按钮内文字大小强制 */
-    .stButton > button p {
+    html body div.stButton > button p {
         font-size: 2.2rem !important;
+        font-weight: 900 !important;
+        color: white !important;
     }
 
-    /* === 2. [修复] 字体扩大到 2.0rem (About & Configuration) === */
+    /* === 2. [修复] 字体扩大 (About & Configuration) === */
     
-    /* (1) 关于 SHScore 的正文文本 */
-    .about-text {
-        font-size: 2.0rem !important; 
-        line-height: 1.5 !important;
+    /* (1) 关于 SHScore 的文本容器 */
+    .about-box-content {
+        font-size: 24px !important; /* 强制 2.0rem */
+        line-height: 1.6 !important;
         color: #37474f !important;
     }
     
     /* (2) Patient Subgroup 选项文字 (单选框) */
     div[role="radiogroup"] label p {
-        font-size: 2.0rem !important;
+        font-size: 24px !important; /* 强制 2.0rem */
         font-weight: 600 !important;
         color: #263238 !important;
     }
@@ -86,14 +90,14 @@ st.markdown("""
     }
 
     /* (3) Clinical Variables 输入框标签 */
-    .stNumberInput label p {
-        font-size: 2.0rem !important;
+    div[data-testid="stNumberInput"] label p {
+        font-size: 24px !important; /* 强制 2.0rem */
         font-weight: 900 !important;
         color: #000000 !important;
     }
     /* 输入框内数值大小 */
-    .stNumberInput input {
-        font-size: 1.8rem !important;
+    div[data-testid="stNumberInput"] input {
+        font-size: 20px !important;
         min-height: 50px !important;
     }
 
@@ -162,7 +166,7 @@ st.markdown("""
     .ref-item { font-size: 1.6rem; margin-bottom: 10px; display: flex; align-items: center; }
     .ref-dot { width: 25px; height: 25px; border-radius: 50%; margin-right: 15px; display: inline-block; }
 
-    /* 风险卡片 */
+    /* 风险卡片 (缩小版) */
     .risk-result-card {
         text-align: center;
         padding: 30px;
@@ -183,7 +187,8 @@ st.markdown("""
         margin-bottom: 25px;
     }
     .protocol-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 10px; }
-    
+    .protocol-text { font-size: 1.6rem; line-height: 1.6; }
+
     /* 异常指标 */
     .breakdown-box {
         background: white; border: 2px solid #eee; border-left-width: 10px;
@@ -310,11 +315,11 @@ def calculate_score(user_inputs, rules_df, selected_group):
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-# --- About SHScore (字体已调整为 2.0rem) ---
+# --- 字体修正应用到 About 模块 ---
 st.markdown("""
 <div class="about-box">
     <div class="about-title">📘 About SHScore</div>
-    <div class="about-text">
+    <div class="about-box-content">
         The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool developed using the <b>MIMIC-IV</b> database and externally validated within the <b>eICU</b> Collaborative Research Database. 
         <br><br>
         Recognizing the <b>clinical heterogeneity</b> arising from different underlying comorbidities, this model was trained using <b>dynamic time-series data</b> to capture physiological fluctuations often missed by static snapshots. It is specifically designed to predict <b>short-term (7-day) mortality risk</b> across diverse sepsis phenotypes (e.g., Renal, Liver, Immunodeficiency), demonstrating <b>superior predictive performance</b> compared to traditional scoring systems like SOFA and APACHE II.
@@ -330,7 +335,6 @@ with col_inputs:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
-    # 字体 2.2rem
     st.markdown('<div class="subgroup-title">1. Patient Subgroup Profile</div>', unsafe_allow_html=True)
     selected_group_label = st.radio("Select profile:", options=list(GROUP_MAPPING.keys()), index=0, label_visibility="collapsed")
     selected_group = GROUP_MAPPING[selected_group_label]
@@ -355,7 +359,7 @@ with col_inputs:
                 user_inputs[clean_name] = st.number_input(label, value=None, placeholder="--", step=0.1, key=f"in_{clean_name}")
         
         st.markdown("<br>", unsafe_allow_html=True)
-        # 绿色 2.2rem 按钮
+        # 绿色 2.2rem 按钮 (样式通过 html body div.stButton > button 强制覆盖)
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -369,28 +373,28 @@ with col_results:
         if score < 20:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
-            # 使用列表避免乱码
-            protocol_list = [
-                "**Monitoring:** Standard vital signs q4h.",
-                "**Fluids:** Maintain euvolemia. avoid fluid overload.",
-                "**Antibiotics:** De-escalate based on culture results."
-            ]
+            # 修复乱码：使用 Markdown 列表
+            protocol_list = """
+- **Monitoring:** Standard vital signs q4h.
+- **Fluids:** Maintain euvolemia. avoid fluid overload.
+- **Antibiotics:** De-escalate based on culture results.
+"""
         elif score <= 35:
             risk_class = "risk-card-mid"; risk_label = "INTERMEDIATE RISK"; color_hex = "#FBC02D"
             protocol_title = "⚠️ Enhanced Surveillance Pathway"
-            protocol_list = [
-                "**Monitoring:** Continuous telemetry. Hourly urine output.",
-                "**Labs:** Repeat lactate q6h if elevated.",
-                "**Intervention:** Consider low-dose vasopressors if MAP is unstable."
-            ]
+            protocol_list = """
+- **Monitoring:** Continuous telemetry. Hourly urine output.
+- **Labs:** Repeat lactate q6h if elevated.
+- **Intervention:** Consider low-dose vasopressors if MAP is unstable.
+"""
         else:
             risk_class = "risk-card-high"; risk_label = "HIGH RISK (SEPSIS SHOCK)"; color_hex = "#c62828"
             protocol_title = "🚨 Aggressive Resuscitation Pathway"
-            protocol_list = [
-                "**Hemodynamics:** Target MAP > 65 mmHg immediately with vasopressors.",
-                "**Support:** Prepare for mechanical ventilation or CRRT immediately.",
-                "**Source Control:** Urgent surgical consult within 1 hour."
-            ]
+            protocol_list = """
+- **Hemodynamics:** Target MAP > 65 mmHg immediately with vasopressors.
+- **Support:** Prepare for mechanical ventilation or CRRT immediately.
+- **Source Control:** Urgent surgical consult within 1 hour.
+"""
 
         # 1. 风险图例
         st.markdown("""
@@ -414,7 +418,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # 3. [修复] 临床建议模块 (使用 Markdown 列表避免乱码)
+        # 3. [修复] 临床建议模块 (Markdown 渲染)
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
@@ -422,10 +426,8 @@ with col_results:
             </div>
         </div>
         """, unsafe_allow_html=True)
-        
-        # 在 div 外部渲染 Markdown 列表，确保字体样式应用
-        for item in protocol_list:
-            st.markdown(f"<div style='font-size: 1.6rem; margin-bottom: 8px; color: #37474f;'>• {item}</div>", unsafe_allow_html=True)
+        # 将列表单独渲染以保证 Markdown 解析
+        st.markdown(protocol_list)
 
         # 4. 异常指标列表
         st.markdown(f"""
