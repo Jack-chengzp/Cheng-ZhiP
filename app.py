@@ -12,13 +12,13 @@ st.set_page_config(
     page_title="Sepsis Heterogeneity Score (SHScore)",
     page_icon="🩺",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-# 自定义 CSS 样式 - 医疗专业风格
+# 自定义 CSS 样式
 st.markdown("""
 <style>
-    @import url('https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Roboto:wght@300;400;500;700&display=swap');
+    @import url('https://gs.jurieo.com/gemini/fonts-googleapis/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
     
     html, body, [class*="css"] {
         font-family: 'Roboto', sans-serif;
@@ -28,29 +28,29 @@ st.markdown("""
     /* 主标题样式 */
     .main-title {
         color: #1565c0; /* 医疗蓝 */
-        font-weight: 800;
-        font-size: 2.8rem;
+        font-weight: 900;
+        font-size: 2.5rem;
         margin-bottom: 0.1rem;
         letter-spacing: -0.5px;
     }
     .sub-title {
         color: #546e7a;
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         font-weight: 400;
         margin-bottom: 1.5rem;
     }
 
-    /* 关于模型介绍框 */
+    /* 关于模型介绍框 (蓝色背景) */
     .about-box {
-        background-color: #e3f2fd; /* 淡蓝背景 */
+        background-color: #e3f2fd;
         border-left: 6px solid #1565c0;
-        padding: 20px;
+        padding: 18px 25px;
         border-radius: 8px;
-        margin-bottom: 25px;
+        margin-bottom: 30px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
     .about-title {
-        font-weight: 700;
+        font-weight: 800;
         color: #0d47a1;
         font-size: 1.1rem;
         margin-bottom: 8px;
@@ -60,72 +60,125 @@ st.markdown("""
     .about-text {
         font-size: 0.95rem;
         line-height: 1.6;
-        color: #37474f;
+        color: #263238;
+        text-align: justify;
     }
 
-    /* 卡片容器 */
+    /* 通用卡片容器 */
     .card-container {
         background-color: #ffffff;
         padding: 25px;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        border: 1px solid #f0f0f0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
         margin-bottom: 20px;
     }
     
     .section-header {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #455a64;
-        margin-bottom: 15px;
-        border-bottom: 2px solid #eceff1;
+        font-size: 1.5rem;
+        font-weight: 900;
+        color: #263238;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #eceff1;
         padding-bottom: 10px;
+        display: flex;
+        align-items: center;
     }
 
-    /* === 风险等级卡片配色 (高对比度) === */
+    /* === 风险等级卡片配色 === */
+    
     /* 低危 - 森林绿 */
     .risk-card-low { 
         background-color: #e8f5e9; 
         color: #1b5e20; 
-        border: 2px solid #2e7d32;
+        border: 3px solid #2e7d32;
     }
-    /* 中危 - 琥珀色 (对比度比纯黄高) */
+    
+    /* 中危 - 香蕉黄 (Banana Yellow) */
     .risk-card-mid { 
-        background-color: #fff8e1; 
-        color: #bf360c; 
-        border: 2px solid #ff8f00;
+        background-color: #FFF9C4; /* 浅香蕉黄背景 */
+        color: #212121;            /* 深黑色文字，对比度极高 */
+        border: 3px solid #FBC02D; /* 深香蕉黄边框 */
     }
+    
     /* 高危 - 火红 */
     .risk-card-high { 
         background-color: #ffebee; 
         color: #b71c1c; 
-        border: 2px solid #c62828;
+        border: 3px solid #c62828;
     }
 
     /* 临床建议框 */
     .protocol-box {
         background-color: #fafafa;
         border: 1px solid #ddd;
-        border-top: 4px solid #333;
+        border-left: 5px solid #546e7a;
         padding: 20px;
         border-radius: 4px;
         margin-top: 15px;
+    }
+    
+    /* Risk Reference (放在右下角的图例) */
+    .reference-box {
+        background-color: #fcfcfc;
+        border: 1px solid #eeeeee;
+        border-radius: 10px;
+        padding: 15px 20px;
+        margin-top: 15px;
+    }
+    .ref-title {
+        font-weight: 800;
+        color: #546e7a;
+        margin-bottom: 10px;
+        font-size: 1rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 5px;
+    }
+    .ref-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #455a64;
+    }
+    .ref-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        margin-right: 12px;
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* === [关键修改] 变量输入框字体增强 === */
+    .stNumberInput label {
+        font-size: 1.2rem !important;  /* 字号加大 */
+        font-weight: 900 !important;   /* 字重极粗 */
+        color: #000000 !important;     /* 纯黑 */
+        margin-bottom: 5px !important;
+    }
+    .stNumberInput input {
+        font-weight: 500;
     }
     
     /* 按钮样式 */
     div.stButton > button:first-child {
         background: #1565c0;
         color: white;
-        font-size: 1.1rem;
-        height: 3em;
+        font-size: 1.2rem;
+        height: 3.5em;
         border-radius: 8px;
         border: none;
         width: 100%;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(21, 101, 192, 0.2);
         transition: all 0.3s;
     }
     div.stButton > button:first-child:hover {
         background: #0d47a1;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        box-shadow: 0 6px 12px rgba(21, 101, 192, 0.3);
+        transform: translateY(-2px);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -179,7 +232,7 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
             pass
             
     if df is None:
-        # DEMO DATA (用于演示)
+        # DEMO DATA
         data = {
             "Variable": [
                 "Age (years)", "APSIII_score (pts)", "BUN (mg/dL)", 
@@ -279,66 +332,54 @@ def calculate_score(user_inputs, rules_df, selected_group):
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-# --- 介绍模块 (移至上方) ---
+# --- 介绍模块 (About SHScore) - 文案已更新 ---
 st.markdown("""
 <div class="about-box">
     <div class="about-title">📘 About SHScore</div>
     <div class="about-text">
-        The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool designed to predict 7-day mortality in sepsis patients. 
-        Unlike traditional scoring systems (e.g., SOFA, APACHE II) which apply a one-size-fits-all approach, SHScore is optimized to identify 
-        <b>high-risk phenotypes</b>, particularly within specific comorbidity subgroups (Renal, Liver, and Immunodeficiency).
+        The <b>Sepsis Heterogeneity Score (SHScore)</b> addresses the critical challenge of <b>clinical heterogeneity</b> in sepsis, 
+        where distinct comorbidities drive divergent disease trajectories. Developed using <b>dynamic time-series data</b> from the <b>MIMIC-IV</b> database 
+        and externally validated on the <b>eICU</b> cohort, this tool captures subtle physiological fluctuations often missed by static snapshots.
         <br><br>
-        <i>This tool assists clinicians in early identification of patients requiring aggressive intervention.</i>
+        It is specifically calibrated to stratify <b>short-term (7-day) mortality risk</b> across diverse phenotypes (e.g., Renal, Liver, Immunodeficiency), 
+        demonstrating superior discriminative power compared to conventional systems like SOFA and APACHE II.
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-# --- 侧边栏配置 ---
-with st.sidebar:
-    st.image("https://img.icons8.com/fluency/96/settings.png", width=50)
-    st.markdown("## ⚙️ Configuration")
-    
-    st.markdown("### 1. Patient Subgroup")
-    selected_group_label = st.radio(
-        "Select the primary comorbidity profile:",
-        options=list(GROUP_MAPPING.keys()),
-        index=0
-    )
-    selected_group = GROUP_MAPPING[selected_group_label]
-    
-    st.markdown("---")
-    
-    st.markdown("### 2. Risk Reference")
-    st.info("""
-    **Score Interpretation:**
-    
-    🟢 **< 20 pts**: Low Risk
-    * Routine sepsis management.
-    
-    🟠 **20 - 35 pts**: Intermediate Risk
-    * Enhanced monitoring required.
-    
-    🔴 **> 35 pts**: High Risk
-    * Urgent, aggressive ICU intervention.
-    """)
-    
-    st.markdown("---")
-    st.caption("© 2024 SHScore Research Group. For research use only.")
-
 # --- 加载数据 ---
 rules_df = load_rules()
-current_group_vars = rules_df[rules_df["Group"] == selected_group]["Variable"].unique()
 
 # --- 主内容区：两列布局 ---
 col_inputs, col_results = st.columns([1.1, 0.9], gap="large")
 
+# ================================
+# 左侧：配置与输入 (Configuration)
+# ================================
 with col_inputs:
-    st.markdown('<div class="card-container"><div class="section-header">📝 Clinical Variables Input</div>', unsafe_allow_html=True)
+    st.markdown('<div class="card-container">', unsafe_allow_html=True)
     
+    # 标题替换：Configuration
+    st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
+    
+    # 1. Subgroup Selection
+    st.markdown("##### 1. Patient Subgroup Profile")
+    selected_group_label = st.radio(
+        "Select the primary comorbidity profile:",
+        options=list(GROUP_MAPPING.keys()),
+        index=0,
+        label_visibility="collapsed"
+    )
+    selected_group = GROUP_MAPPING[selected_group_label]
+    current_group_vars = rules_df[rules_df["Group"] == selected_group]["Variable"].unique()
+    
+    st.markdown("---")
+    st.markdown("##### 2. Clinical Variables")
+    st.caption("Enter the latest clinical values within the first 24 hours.")
+    
+    # 2. 变量输入表单
     user_inputs = {}
-    
     with st.form("input_form"):
-        st.caption("Please enter the latest clinical values within the first 24 hours of admission.")
         input_cols = st.columns(2)
         sorted_vars = sorted(current_group_vars)
         
@@ -363,62 +404,59 @@ with col_inputs:
     
     st.markdown('</div>', unsafe_allow_html=True) # End card
 
+# ================================
+# 右侧：结果展示与图例 (Results & Reference)
+# ================================
 with col_results:
     if submitted:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
-        # === 核心逻辑：定义鲜艳配色与阈值 ===
+        # === 核心逻辑：定义配色与阈值 ===
         if score < 20:
             risk_class = "risk-card-low"
             risk_label = "LOW RISK"
-            color_hex = "#2e7d32" # 鲜艳的森林绿
-            color_bg = "#e8f5e9"
+            color_hex = "#2e7d32" # 森林绿
             protocol = """
             **✅ Standard Care Pathway**
             * **Monitoring:** Standard vital signs q4h.
             * **Fluids:** Maintain euvolemia.
             * **Antibiotics:** De-escalate based on culture results.
-            * **Disposition:** General ward or step-down unit may be appropriate if stable.
             """
         elif score <= 35:
             risk_class = "risk-card-mid"
             risk_label = "INTERMEDIATE RISK"
-            color_hex = "#f57f17" # 醒目的琥珀色
-            color_bg = "#fff8e1"
+            color_hex = "#FBC02D" # 香蕉黄/深金黄
             protocol = """
             **⚠️ Enhanced Surveillance Pathway**
             * **Monitoring:** Continuous telemetry. Hourly urine output.
             * **Labs:** Repeat lactate q6h if elevated.
-            * **Intervention:** Low-dose vasopressors might be needed. Ensure central access.
-            * **Disposition:** ICU admission recommended.
+            * **Intervention:** Low-dose vasopressors might be needed.
             """
         else:
             risk_class = "risk-card-high"
             risk_label = "HIGH RISK (SEPSIS SHOCK)"
-            color_hex = "#c62828" # 鲜艳的火红
-            color_bg = "#ffebee"
+            color_hex = "#c62828" # 火红
             protocol = """
             **🚨 Aggressive Resuscitation Pathway**
-            * **Hemodynamics:** Target MAP > 65 mmHg immediately using norepinephrine.
-            * **Support:** Prepare for mechanical ventilation and CRRT.
-            * **Source Control:** Urgent surgical/interventional consult within 1 hour.
-            * **Goals:** Lactate clearance > 20% within 2 hours. ScvO2 > 70%.
+            * **Hemodynamics:** Target MAP > 65 mmHg immediately.
+            * **Support:** Prepare for mechanical ventilation/CRRT.
+            * **Source Control:** Urgent surgical consult within 1 hour.
             """
 
         # 1. 结果大卡片
         st.markdown(f"""
         <div class="card-container {risk_class}" style="text-align: center;">
-            <div style="font-size: 1rem; font-weight: 700; opacity: 0.8; letter-spacing: 1px;">PREDICTED MORTALITY RISK</div>
-            <div style="font-size: 1.8rem; font-weight: 900; margin: 10px 0; color: {color_hex};">{risk_label}</div>
+            <div style="font-size: 1rem; font-weight: 700; opacity: 0.8; letter-spacing: 1px;">PREDICTED 7-DAY MORTALITY</div>
+            <div style="font-size: 1.8rem; font-weight: 900; margin: 10px 0; color: inherit;">{risk_label}</div>
             <div style="font-size: 4.5rem; font-weight: 900; line-height: 1; margin-bottom: 10px;">{prob_percent:.1f}%</div>
-            <div style="background: rgba(0,0,0,0.05); display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: bold;">
+            <div style="background: rgba(255,255,255,0.4); display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: bold;">
                 SHScore: {score} pts
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # 2. 动态仪表盘 (固定三色背景，指针变色)
+        # 2. 动态仪表盘
         fig = go.Figure(go.Indicator(
             mode = "gauge+number",
             value = score,
@@ -427,12 +465,12 @@ with col_results:
             number = {'suffix': " pts", 'font': {'color': color_hex, 'weight': 'bold', 'size': 20}},
             gauge = {
                 'axis': {'range': [None, 80], 'tickwidth': 1, 'tickcolor': "#333"}, 
-                'bar': {'color': color_hex, 'thickness': 0.25}, # 指针颜色跟随风险等级
+                'bar': {'color': color_hex, 'thickness': 0.25},
                 'bgcolor': "white",
                 'borderwidth': 0,
                 'steps': [
                     {'range': [0, 20], 'color': '#a5d6a7'},  # 浅绿
-                    {'range': [20, 35], 'color': '#ffe082'}, # 浅黄
+                    {'range': [20, 35], 'color': '#FFF59D'}, # 浅香蕉黄
                     {'range': [35, 80], 'color': '#ef9a9a'}  # 浅红
                 ],
                 'threshold': {
@@ -444,7 +482,7 @@ with col_results:
         fig.update_layout(height=180, margin=dict(l=30, r=30, t=30, b=10))
         st.plotly_chart(fig, use_container_width=True)
 
-        # 3. 详细的医疗建议
+        # 3. 详细建议
         st.markdown(f"""
         <div class="protocol-box">
             <h5 style="color: {color_hex}; margin-top:0;">📋 Clinical Management Guide</h5>
@@ -452,24 +490,31 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
 
-        # 4. 解释性内容：为何得分
-        with st.expander("🔍 Detailed Score Breakdown (Why this score?)", expanded=False):
+        # 4. 得分详情
+        with st.expander("🔍 Detailed Score Breakdown", expanded=False):
             if details:
-                st.write("The following indicators deviated from baseline, contributing to the score:")
+                st.write("Abnormal indicators contributing to risk:")
                 for d in details:
-                    st.markdown(f"""
-                    - **{d['var']}**: Value `{d['val']}` added **+{d['points']} pts**
-                      <br><small style="color:gray">Rule: {d['rule']}</small>
-                    """, unsafe_allow_html=True)
+                    st.markdown(f"- **{d['var']}**: Value `{d['val']}` added **+{d['points']} pts**")
             else:
-                st.success("All clinical indicators are within the baseline range (0 points added).")
+                st.success("All indicators within baseline.")
 
     else:
-        # 初始空白状态提示
+        # 初始空白提示
         st.markdown("""
-        <div style="background-color: #f1f8e9; border: 2px dashed #aed581; border-radius: 12px; padding: 40px; text-align: center; color: #558b2f;">
+        <div style="background-color: #f5f5f5; border: 2px dashed #bdbdbd; border-radius: 12px; padding: 40px; text-align: center; color: #757575;">
             <div style="font-size: 3rem; margin-bottom: 10px;">👈</div>
             <h3 style="margin:0;">Ready to Calculate</h3>
-            <p style="margin-top: 10px;">Please enter clinical data in the left panel to generate a risk assessment.</p>
+            <p style="margin-top: 10px;">Please enter clinical data in the left <b>Configuration</b> panel.</p>
         </div>
         """, unsafe_allow_html=True)
+
+    # === Risk Reference (放在右侧栏底部) ===
+    st.markdown("""
+    <div class="reference-box">
+        <div class="ref-title">🚦 Risk Score Interpretation</div>
+        <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 20 pts:</b> Low Risk</div>
+        <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>20 - 35 pts:</b> Intermediate Risk</div>
+        <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 35 pts:</b> High Risk</div>
+    </div>
+    """, unsafe_allow_html=True)
