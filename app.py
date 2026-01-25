@@ -33,37 +33,31 @@ st.markdown("""
         max-width: 95% !important;
     }
 
-    /* === 1. [核心修复] 单选按钮选项字体 (Subgroup Options) === */
-    /* 强制覆盖 Streamlit Markdown 容器内的 P 标签 */
+    /* === 1. [核心修复] 单选按钮选项字体 === */
     div[role="radiogroup"] label div[data-testid="stMarkdownContainer"] p {
-        font-size: 2.2rem !important; /* 强制 2.2rem */
-        font-weight: 700 !important;  /* 加粗 */
+        font-size: 2.2rem !important; 
+        font-weight: 700 !important;  
         line-height: 1.2 !important;
         color: #37474f !important;
     }
     
-    /* 调整单选框容器的大小以适应大字体 */
     div[role="radiogroup"] label {
         padding: 25px 20px !important;
         background-color: #f8f9fa;
         border: 2px solid #e0e0e0;
         border-radius: 12px;
-        display: flex;
-        align-items: center;
     }
-    /* 选中状态 */
     div[role="radiogroup"] label[data-checked="true"] {
         background-color: #e3f2fd !important;
         border-color: #1565c0 !important;
     }
 
-    /* === 2. [核心修复] 绿色计算按钮 === */
-    /* 移除默认样式干扰，强制绿色 */
+    /* === 2. [核心修复] 绿色计算按钮 (强力覆盖) === */
     div.stButton > button {
         background-image: none !important;
         background-color: #2e7d32 !important; /* 鲜艳绿 */
         color: white !important;
-        border: none !important;
+        border: 2px solid #1b5e20 !important;
         box-shadow: 0 4px 10px rgba(46, 125, 50, 0.5) !important;
         font-size: 2.2rem !important;
         font-weight: 900 !important;
@@ -73,24 +67,11 @@ st.markdown("""
         width: 100% !important;
         transition: all 0.2s !important;
     }
-    
-    /* 悬停状态 */
     div.stButton > button:hover {
-        background-color: #1b5e20 !important; /* 深绿 */
+        background-color: #1b5e20 !important; 
         color: #ffffff !important;
-        box-shadow: 0 6px 15px rgba(46, 125, 50, 0.6) !important;
         transform: translateY(-2px);
     }
-    
-    /* 点击/聚焦状态 (防止变红或变蓝) */
-    div.stButton > button:active, div.stButton > button:focus {
-        background-color: #1b5e20 !important;
-        color: white !important;
-        border: none !important;
-        outline: none !important;
-    }
-    
-    /* 按钮内部文字容器 */
     div.stButton > button p {
         font-size: 2.2rem !important;
         font-weight: 900 !important;
@@ -108,7 +89,7 @@ st.markdown("""
     .stNumberInput input {
         font-size: 1.6rem !important;
         font-weight: 500;
-        min-height: 4rem !important; /* 输入框更高 */
+        min-height: 4rem !important; 
         padding: 10px !important;
     }
 
@@ -147,7 +128,6 @@ st.markdown("""
     }
 
     /* === 5. 右侧模块布局 === */
-    /* 风险图例 */
     .reference-box {
         background-color: white;
         border: 3px solid #eceff1;
@@ -163,7 +143,7 @@ st.markdown("""
         border-bottom: 3px solid #eee;
     }
     .ref-item {
-        font-size: 1.8rem; /* 图例内容加大 */
+        font-size: 1.8rem; 
         font-weight: 600;
         color: #455a64;
         margin-bottom: 15px;
@@ -175,7 +155,6 @@ st.markdown("""
         margin-right: 20px; display: inline-block;
     }
 
-    /* 占位符 (Ready to Calculate) */
     .placeholder-box {
         background-color: #f1f8e9; 
         border: 5px dashed #a5d6a7; 
@@ -188,6 +167,7 @@ st.markdown("""
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        margin-top: 35px;
     }
 
     /* === 6. Configuration 标题 === */
@@ -206,7 +186,6 @@ st.markdown("""
         color: #000;
     }
 
-    /* 卡片容器 */
     .card-container {
         background-color: #ffffff;
         padding: 40px; 
@@ -215,7 +194,6 @@ st.markdown("""
         border: 1px solid #e0e0e0;
     }
 
-    /* 单选按钮组布局 */
     div[role="radiogroup"] {
         display: grid;
         grid-template-columns: 1fr 1fr; 
@@ -227,14 +205,16 @@ st.markdown("""
     .risk-card-mid { background:#fff9c4; color:#000; border:6px solid #fbc02d; }
     .risk-card-high { background:#ffebee; color:#b71c1c; border:6px solid #c62828; }
 
-    .protocol-box {
-        background-color: #fafafa;
-        border: 1px solid #ddd;
-        border-left: 10px solid #546e7a;
+    /* === 7. 异常指标解释框 (替代原指南) === */
+    .breakdown-box {
+        background-color: #ffffff;
+        border: 2px solid #e0e0e0;
+        border-left-width: 10px; /* 左侧加粗 */
         padding: 35px;
         border-radius: 8px;
         margin-top: 30px;
         font-size: 1.5rem; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -369,7 +349,6 @@ with col_inputs:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
-    # 2.2rem 标题
     st.markdown('<div class="subgroup-title">1. Patient Subgroup Profile</div>', unsafe_allow_html=True)
     selected_group_label = st.radio("Select profile:", options=list(GROUP_MAPPING.keys()), index=0, label_visibility="collapsed")
     selected_group = GROUP_MAPPING[selected_group_label]
@@ -394,7 +373,7 @@ with col_inputs:
                 user_inputs[clean_name] = st.number_input(label, value=None, placeholder="--", step=0.1, key=f"in_{clean_name}")
         
         st.markdown("<br>", unsafe_allow_html=True)
-        # 绿色大按钮
+        # 绿色按钮
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -404,15 +383,28 @@ with col_results:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
+        # 颜色与样式定义
         if score < 20:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
-            protocol = "**✅ Standard Care Pathway**: Monitoring q4h, Fluids euvolemia, Antibiotics de-escalation."
         elif score <= 35:
             risk_class = "risk-card-mid"; risk_label = "INTERMEDIATE RISK"; color_hex = "#FBC02D"
-            protocol = "**⚠️ Enhanced Surveillance**: Continuous telemetry, Hourly urine, Repeat lactate."
         else:
             risk_class = "risk-card-high"; risk_label = "HIGH RISK (SEPSIS SHOCK)"; color_hex = "#c62828"
-            protocol = "**🚨 Aggressive Resuscitation**: Target MAP > 65, Mechanical ventilation prep, Urgent surgical consult."
+
+        # 生成异常指标 HTML
+        if details:
+            abnormal_items = ""
+            for d in details:
+                abnormal_items += f"""
+                <li style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
+                    <span style="font-weight:900; color:#333;">{d['var']}</span> 
+                    <span style="color:#666;">(Value: {d['val']})</span>
+                    <span style="float:right; font-weight:900; color:{color_hex};">+{d['points']} pts</span>
+                </li>
+                """
+            abnormal_html = f"<ul style='list-style:none; padding-left:0; margin:0;'>{abnormal_items}</ul>"
+        else:
+            abnormal_html = f"<div style='color:#2e7d32; font-weight:bold; font-size:1.6rem;'>✅ All clinical indicators are within the baseline range. (Score: 0)</div>"
 
         # Risk Reference (Top)
         st.markdown("""
@@ -437,9 +429,19 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # Protocol & Gauge
-        st.markdown(f"""<div class="protocol-box" style="font-size:1.6rem; margin-top:30px;"><b style="color:{color_hex}">📋 Guide:</b> {protocol}</div>""", unsafe_allow_html=True)
+        # [替换] 异常指标解释框 (Abnormal Indicators Breakdown)
+        st.markdown(f"""
+        <div class="breakdown-box" style="border-left-color: {color_hex};">
+            <div style="color: {color_hex}; font-weight: 900; font-size: 2rem; margin-bottom: 20px;">
+                🔍 Abnormal Risk Factors
+            </div>
+            <div style="font-size: 1.5rem; color: #455a64; line-height: 1.6;">
+                {abnormal_html}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
+        # Gauge Chart
         st.markdown("<br>", unsafe_allow_html=True)
         fig = go.Figure(go.Indicator(
             mode = "gauge+number", value = score,
@@ -451,7 +453,7 @@ with col_results:
         st.plotly_chart(fig, use_container_width=True)
 
     else:
-        # Risk Reference (Top)
+        # Initial State
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation</div>
@@ -461,7 +463,6 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
-        # Placeholder (Bottom)
         st.markdown("""
         <div class="placeholder-box">
             <div style="font-size: 8rem; margin-bottom: 30px;">👈</div>
