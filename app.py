@@ -22,162 +22,178 @@ st.markdown("""
     
     html, body, [class*="css"] {
         font-family: 'Roboto', sans-serif;
-        color: #333333;
+        color: #212121;
     }
     
-    /* 主标题样式 */
+    /* === 1. 标题与文案增强 === */
     .main-title {
-        color: #1565c0; /* 医疗蓝 */
+        color: #1565c0; 
         font-weight: 900;
-        font-size: 2.5rem;
+        font-size: 3rem; /* 标题更大 */
         margin-bottom: 0.1rem;
         letter-spacing: -0.5px;
     }
     .sub-title {
         color: #546e7a;
-        font-size: 1.1rem;
+        font-size: 1.25rem;
         font-weight: 400;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
     }
 
-    /* 关于模型介绍框 (蓝色背景) */
+    /* About 介绍框 - 字体加大 */
     .about-box {
         background-color: #e3f2fd;
-        border-left: 6px solid #1565c0;
-        padding: 18px 25px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border-left: 8px solid #1565c0;
+        padding: 25px 30px; /* 内边距加大 */
+        border-radius: 12px;
+        margin-bottom: 35px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     .about-title {
-        font-weight: 800;
+        font-weight: 900;
         color: #0d47a1;
-        font-size: 1.1rem;
-        margin-bottom: 8px;
+        font-size: 1.3rem; /* 标题加大 */
+        margin-bottom: 12px;
         display: flex;
         align-items: center;
     }
     .about-text {
-        font-size: 0.95rem;
-        line-height: 1.6;
+        font-size: 1.15rem; /* 正文加大 (原0.95) */
+        line-height: 1.65;
         color: #263238;
         text-align: justify;
+        font-weight: 400;
     }
 
-    /* 通用卡片容器 */
+    /* === 2. 容器与布局 === */
     .card-container {
         background-color: #ffffff;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        border: 1px solid #e0e0e0;
-        margin-bottom: 20px;
+        padding: 30px;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        border: 1px solid #eeeeee;
+        margin-bottom: 25px;
     }
     
     .section-header {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: 900;
         color: #263238;
-        margin-bottom: 20px;
+        margin-bottom: 25px;
         border-bottom: 3px solid #eceff1;
-        padding-bottom: 10px;
+        padding-bottom: 12px;
         display: flex;
         align-items: center;
     }
 
-    /* === 风险等级卡片配色 === */
+    /* === 3. 右侧模块高度平衡优化 === */
     
-    /* 低危 - 森林绿 */
+    /* 占位符模块 - 强制高度以对齐左侧 */
+    .placeholder-box {
+        background-color: #f8f9fa; 
+        border: 3px dashed #cfd8dc; 
+        border-radius: 16px; 
+        padding: 40px; 
+        text-align: center; 
+        color: #78909c;
+        min-height: 520px; /* 关键：强制高度，撑开右侧 */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    /* 图例模块 - 加大尺寸 */
+    .reference-box {
+        background-color: #ffffff;
+        border: 1px solid #e0e0e0;
+        border-radius: 12px;
+        padding: 25px 30px; /* 增加填充 */
+        margin-top: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+    .ref-title {
+        font-weight: 900;
+        color: #37474f;
+        margin-bottom: 15px;
+        font-size: 1.2rem; /* 加大 */
+        border-bottom: 2px solid #f5f5f5;
+        padding-bottom: 8px;
+    }
+    .ref-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        font-size: 1.1rem; /* 加大 */
+        font-weight: 500;
+        color: #455a64;
+    }
+    .ref-dot {
+        width: 18px; /* 加大 */
+        height: 18px;
+        border-radius: 50%;
+        margin-right: 15px;
+        display: inline-block;
+        border: 1px solid rgba(0,0,0,0.1);
+        flex-shrink: 0;
+    }
+
+    /* === 4. 风险卡片配色 === */
     .risk-card-low { 
-        background-color: #e8f5e9; 
-        color: #1b5e20; 
-        border: 3px solid #2e7d32;
+        background-color: #e8f5e9; color: #1b5e20; border: 3px solid #2e7d32;
     }
-    
-    /* 中危 - 香蕉黄 (Banana Yellow) */
+    /* 香蕉黄风格 */
     .risk-card-mid { 
-        background-color: #FFF9C4; /* 浅香蕉黄背景 */
-        color: #212121;            /* 深黑色文字，对比度极高 */
-        border: 3px solid #FBC02D; /* 深香蕉黄边框 */
+        background-color: #FFF9C4; color: #212121; border: 3px solid #FBC02D;
     }
-    
-    /* 高危 - 火红 */
     .risk-card-high { 
-        background-color: #ffebee; 
-        color: #b71c1c; 
-        border: 3px solid #c62828;
+        background-color: #ffebee; color: #b71c1c; border: 3px solid #c62828;
     }
 
     /* 临床建议框 */
     .protocol-box {
         background-color: #fafafa;
         border: 1px solid #ddd;
-        border-left: 5px solid #546e7a;
-        padding: 20px;
-        border-radius: 4px;
-        margin-top: 15px;
-    }
-    
-    /* Risk Reference (放在右下角的图例) */
-    .reference-box {
-        background-color: #fcfcfc;
-        border: 1px solid #eeeeee;
-        border-radius: 10px;
-        padding: 15px 20px;
-        margin-top: 15px;
-    }
-    .ref-title {
-        font-weight: 800;
-        color: #546e7a;
-        margin-bottom: 10px;
-        font-size: 1rem;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 5px;
-    }
-    .ref-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 8px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: #455a64;
-    }
-    .ref-dot {
-        width: 14px;
-        height: 14px;
-        border-radius: 50%;
-        margin-right: 12px;
-        display: inline-block;
-        border: 1px solid rgba(0,0,0,0.1);
+        border-left: 6px solid #546e7a;
+        padding: 25px;
+        border-radius: 6px;
+        margin-top: 20px;
+        font-size: 1.05rem;
     }
 
-    /* === [关键修改] 变量输入框字体增强 === */
+    /* === 5. 输入框字体超级增强 === */
     .stNumberInput label {
-        font-size: 1.2rem !important;  /* 字号加大 */
-        font-weight: 900 !important;   /* 字重极粗 */
-        color: #000000 !important;     /* 纯黑 */
-        margin-bottom: 5px !important;
+        font-size: 1.25rem !important;  /* 字体加大到 1.25rem */
+        font-weight: 900 !important;    /* 极粗 */
+        color: #000000 !important;      /* 纯黑 */
+        margin-bottom: 8px !important;
+        letter-spacing: 0.3px;
     }
     .stNumberInput input {
-        font-weight: 500;
+        font-size: 1.1rem;
+        color: #333;
+    }
+    /* 单选按钮字体加大 */
+    .stRadio label {
+        font-size: 1.15rem !important;
+        color: #333 !important;
     }
     
     /* 按钮样式 */
     div.stButton > button:first-child {
         background: #1565c0;
         color: white;
-        font-size: 1.2rem;
-        height: 3.5em;
-        border-radius: 8px;
+        font-size: 1.3rem; /* 按钮字加大 */
+        height: 3.8em;
+        border-radius: 10px;
         border: none;
         width: 100%;
-        font-weight: bold;
-        box-shadow: 0 4px 6px rgba(21, 101, 192, 0.2);
-        transition: all 0.3s;
+        font-weight: 800;
+        box-shadow: 0 4px 10px rgba(21, 101, 192, 0.2);
+        margin-top: 15px;
     }
     div.stButton > button:first-child:hover {
         background: #0d47a1;
-        box-shadow: 0 6px 12px rgba(21, 101, 192, 0.3);
         transform: translateY(-2px);
     }
 </style>
@@ -230,7 +246,6 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
             df = pd.read_csv(csv_path)
         except:
             pass
-            
     if df is None:
         # DEMO DATA
         data = {
@@ -328,21 +343,18 @@ def calculate_score(user_inputs, rules_df, selected_group):
 # 4. 主界面布局
 # ==========================================
 
-# --- 主标题区域 ---
+# --- 主标题 ---
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-# --- 介绍模块 (About SHScore) - 文案已更新 ---
+# --- 文案更新 (About SHScore) ---
 st.markdown("""
 <div class="about-box">
     <div class="about-title">📘 About SHScore</div>
     <div class="about-text">
-        The <b>Sepsis Heterogeneity Score (SHScore)</b> addresses the critical challenge of <b>clinical heterogeneity</b> in sepsis, 
-        where distinct comorbidities drive divergent disease trajectories. Developed using <b>dynamic time-series data</b> from the <b>MIMIC-IV</b> database 
-        and externally validated on the <b>eICU</b> cohort, this tool captures subtle physiological fluctuations often missed by static snapshots.
+        The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool developed using the <b>MIMIC-IV</b> database and externally validated within the <b>eICU</b> Collaborative Research Database. 
         <br><br>
-        It is specifically calibrated to stratify <b>short-term (7-day) mortality risk</b> across diverse phenotypes (e.g., Renal, Liver, Immunodeficiency), 
-        demonstrating superior discriminative power compared to conventional systems like SOFA and APACHE II.
+        Recognizing the <b>clinical heterogeneity</b> arising from different underlying comorbidities, this model was trained using <b>dynamic time-series data</b> to capture physiological fluctuations often missed by static snapshots. It is specifically designed to predict <b>short-term (7-day) mortality risk</b> across diverse sepsis phenotypes (e.g., Renal, Liver, Immunodeficiency), demonstrating <b>superior predictive performance</b> compared to traditional scoring systems like SOFA and APACHE II.
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -350,19 +362,18 @@ st.markdown("""
 # --- 加载数据 ---
 rules_df = load_rules()
 
-# --- 主内容区：两列布局 ---
+# --- 主内容区：两列布局 (Left 1.1 : Right 0.9) ---
 col_inputs, col_results = st.columns([1.1, 0.9], gap="large")
 
 # ================================
-# 左侧：配置与输入 (Configuration)
+# 左侧：Configuration & Inputs
 # ================================
 with col_inputs:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     
-    # 标题替换：Configuration
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
-    # 1. Subgroup Selection
+    # 1. Subgroup (字体加大)
     st.markdown("##### 1. Patient Subgroup Profile")
     selected_group_label = st.radio(
         "Select the primary comorbidity profile:",
@@ -377,7 +388,7 @@ with col_inputs:
     st.markdown("##### 2. Clinical Variables")
     st.caption("Enter the latest clinical values within the first 24 hours.")
     
-    # 2. 变量输入表单
+    # 2. 输入表单 (两列)
     user_inputs = {}
     with st.form("input_form"):
         input_cols = st.columns(2)
@@ -405,7 +416,7 @@ with col_inputs:
     st.markdown('</div>', unsafe_allow_html=True) # End card
 
 # ================================
-# 右侧：结果展示与图例 (Results & Reference)
+# 右侧：结果展示 & 图例
 # ================================
 with col_results:
     if submitted:
@@ -416,7 +427,7 @@ with col_results:
         if score < 20:
             risk_class = "risk-card-low"
             risk_label = "LOW RISK"
-            color_hex = "#2e7d32" # 森林绿
+            color_hex = "#2e7d32" 
             protocol = """
             **✅ Standard Care Pathway**
             * **Monitoring:** Standard vital signs q4h.
@@ -426,7 +437,7 @@ with col_results:
         elif score <= 35:
             risk_class = "risk-card-mid"
             risk_label = "INTERMEDIATE RISK"
-            color_hex = "#FBC02D" # 香蕉黄/深金黄
+            color_hex = "#FBC02D" # 香蕉黄
             protocol = """
             **⚠️ Enhanced Surveillance Pathway**
             * **Monitoring:** Continuous telemetry. Hourly urine output.
@@ -436,7 +447,7 @@ with col_results:
         else:
             risk_class = "risk-card-high"
             risk_label = "HIGH RISK (SEPSIS SHOCK)"
-            color_hex = "#c62828" # 火红
+            color_hex = "#c62828" 
             protocol = """
             **🚨 Aggressive Resuscitation Pathway**
             * **Hemodynamics:** Target MAP > 65 mmHg immediately.
@@ -447,22 +458,22 @@ with col_results:
         # 1. 结果大卡片
         st.markdown(f"""
         <div class="card-container {risk_class}" style="text-align: center;">
-            <div style="font-size: 1rem; font-weight: 700; opacity: 0.8; letter-spacing: 1px;">PREDICTED 7-DAY MORTALITY</div>
-            <div style="font-size: 1.8rem; font-weight: 900; margin: 10px 0; color: inherit;">{risk_label}</div>
-            <div style="font-size: 4.5rem; font-weight: 900; line-height: 1; margin-bottom: 10px;">{prob_percent:.1f}%</div>
-            <div style="background: rgba(255,255,255,0.4); display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: bold;">
+            <div style="font-size: 1.1rem; font-weight: 700; opacity: 0.8; letter-spacing: 1px;">PREDICTED 7-DAY MORTALITY</div>
+            <div style="font-size: 2rem; font-weight: 900; margin: 12px 0; color: inherit;">{risk_label}</div>
+            <div style="font-size: 5rem; font-weight: 900; line-height: 1; margin-bottom: 15px;">{prob_percent:.1f}%</div>
+            <div style="background: rgba(255,255,255,0.4); display: inline-block; padding: 8px 20px; border-radius: 30px; font-weight: bold; font-size: 1.2rem;">
                 SHScore: {score} pts
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # 2. 动态仪表盘
+        # 2. 仪表盘
         fig = go.Figure(go.Indicator(
             mode = "gauge+number",
             value = score,
             domain = {'x': [0, 1], 'y': [0, 1]},
-            title = {'text': "Risk Severity Gauge", 'font': {'size': 14, 'color': "#555"}},
-            number = {'suffix': " pts", 'font': {'color': color_hex, 'weight': 'bold', 'size': 20}},
+            title = {'text': "Risk Severity Gauge", 'font': {'size': 16, 'color': "#555", 'weight': 'bold'}},
+            number = {'suffix': " pts", 'font': {'color': color_hex, 'weight': 'bold', 'size': 24}},
             gauge = {
                 'axis': {'range': [None, 80], 'tickwidth': 1, 'tickcolor': "#333"}, 
                 'bar': {'color': color_hex, 'thickness': 0.25},
@@ -479,13 +490,13 @@ with col_results:
                     'value': score
                 }
             }))
-        fig.update_layout(height=180, margin=dict(l=30, r=30, t=30, b=10))
+        fig.update_layout(height=200, margin=dict(l=30, r=30, t=30, b=10))
         st.plotly_chart(fig, use_container_width=True)
 
         # 3. 详细建议
         st.markdown(f"""
         <div class="protocol-box">
-            <h5 style="color: {color_hex}; margin-top:0;">📋 Clinical Management Guide</h5>
+            <h5 style="color: {color_hex}; margin-top:0; font-weight:800;">📋 Clinical Management Guide</h5>
             {protocol}
         </div>
         """, unsafe_allow_html=True)
@@ -500,21 +511,23 @@ with col_results:
                 st.success("All indicators within baseline.")
 
     else:
-        # 初始空白提示
+        # 初始空白提示 (增加高度以平衡左右)
         st.markdown("""
-        <div style="background-color: #f5f5f5; border: 2px dashed #bdbdbd; border-radius: 12px; padding: 40px; text-align: center; color: #757575;">
-            <div style="font-size: 3rem; margin-bottom: 10px;">👈</div>
-            <h3 style="margin:0;">Ready to Calculate</h3>
-            <p style="margin-top: 10px;">Please enter clinical data in the left <b>Configuration</b> panel.</p>
+        <div class="placeholder-box">
+            <div style="font-size: 4rem; margin-bottom: 20px;">👈</div>
+            <h2 style="margin:0; font-weight:800; color:#546e7a;">Ready to Calculate</h2>
+            <p style="margin-top: 15px; font-size:1.1rem; max-width:80%;">
+                Please enter the patient's clinical data in the left <b>Configuration</b> panel to generate a precision risk assessment.
+            </p>
         </div>
         """, unsafe_allow_html=True)
 
-    # === Risk Reference (放在右侧栏底部) ===
+    # === Risk Reference (固定在右侧底部) ===
     st.markdown("""
     <div class="reference-box">
         <div class="ref-title">🚦 Risk Score Interpretation</div>
-        <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 20 pts:</b> Low Risk</div>
-        <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>20 - 35 pts:</b> Intermediate Risk</div>
-        <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 35 pts:</b> High Risk</div>
+        <div class="ref-item"><span class="ref-dot" style="background:#2e7d32;"></span> <b>&lt; 20 pts:</b>&nbsp; Low Risk</div>
+        <div class="ref-item"><span class="ref-dot" style="background:#FBC02D;"></span> <b>20 - 35 pts:</b>&nbsp; Intermediate Risk</div>
+        <div class="ref-item"><span class="ref-dot" style="background:#c62828;"></span> <b>&gt; 35 pts:</b>&nbsp; High Risk</div>
     </div>
     """, unsafe_allow_html=True)
