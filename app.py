@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. 终极 CSS 样式 (V11.0 修复版)
+# 2. CSS 样式 (V13.0)
 # ==========================================
 st.markdown("""
 <style>
@@ -32,7 +32,7 @@ st.markdown("""
         max-width: 98% !important;
     }
 
-    /* === 1. [核心] 绿色计算按钮 (强制生效) === */
+    /* === 1. [核心] 绿色计算按钮 === */
     div.stButton > button {
         background-color: #2e7d32 !important; /* 鲜艳绿 */
         background-image: none !important;
@@ -102,31 +102,48 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. 核心逻辑 (修复了解析 Bug)
+# 3. 核心逻辑与数据
 # ==========================================
+
+# [关键修改] 变量元数据：使用 LaTeX 规范化学式，并修正显示名称
+# full 字段中的 LaTeX 代码会被 Streamlit 自动渲染
 VAR_META = {
     "Age": {"unit": "years", "full": "Age"},
-    "APSIII_score": {"unit": "pts", "full": "APSIII Score"},
-    "Aniongap": {"unit": "mmol/L", "full": "Anion Gap"},
-    "aniongap": {"unit": "mmol/L", "full": "Anion Gap"},
-    "BUN": {"unit": "mg/dL", "full": "Blood Urea Nitrogen"},
-    "DBP": {"unit": "mmHg", "full": "Diastolic BP"},
-    "Fluid_amount": {"unit": "mL", "full": "Fluid Amount"},
+    "APSIII_score": {"unit": "pts", "full": "APSIII_score"}, 
+    "Aniongap": {"unit": "mmol/L", "full": "Aniongap"},     
+    "aniongap": {"unit": "mmol/L", "full": "Aniongap"},
+    "BUN": {"unit": "mg/dL", "full": "BUN"},                
+    "DBP": {"unit": "mmHg", "full": "DBP"},                
+    
+    # [修改] Fluid_amount -> Fluid Amount
+    "Fluid_amount": {"unit": "mL", "full": "Fluid Amount"}, 
     "Fluid Amount": {"unit": "mL", "full": "Fluid Amount"},
-    "HCO3": {"unit": "mmol/L", "full": "Bicarbonate"},
-    "HR": {"unit": "bpm", "full": "Heart Rate"},
-    "K": {"unit": "mmol/L", "full": "Potassium"},
-    "MCV": {"unit": "fL", "full": "Mean Corpuscular Volume"},
-    "Mechnical_Ventilation": {"unit": "0=No, 1=Yes", "full": "Mech. Ventilation"},
-    "Na": {"unit": "mmol/L", "full": "Sodium"},
-    "RDW": {"unit": "%", "full": "Red Cell Distribution Width"},
-    "RR": {"unit": "bpm", "full": "Respiratory Rate"},
-    "SBP": {"unit": "mmHg", "full": "Systolic BP"},
-    "SpO2": {"unit": "%", "full": "Oxygen Saturation"},
-    "T": {"unit": "°C", "full": "Temperature"},
-    "Urine": {"unit": "mL/24h", "full": "Urine Output"},
-    "WBC": {"unit": "x10^9/L", "full": "White Blood Cells"},
-    "Elixhauser_score": {"unit": "pts", "full": "Elixhauser Comorbidity"},
+    
+    # [修改] HCO3 -> HCO3- (3下标, -上标)
+    "HCO3": {"unit": "mmol/L", "full": "HCO$_3^-$"},            
+    
+    "HR": {"unit": "bpm", "full": "HR"},                   
+    
+    # [修改] K -> K+ (+上标)
+    "K": {"unit": "mmol/L", "full": "K$^+$"},                  
+    
+    "MCV": {"unit": "fL", "full": "MCV"},                  
+    "Mechnical_Ventilation": {"unit": "0=No, 1=Yes", "full": "Mechnical_Ventilation"}, 
+    
+    # [修改] Na -> Na+ (+上标)
+    "Na": {"unit": "mmol/L", "full": "Na$^+$"},                
+    
+    "RDW": {"unit": "%", "full": "RDW"},                   
+    "RR": {"unit": "bpm", "full": "RR"},                   
+    "SBP": {"unit": "mmHg", "full": "SBP"},                
+    
+    # [修改] SpO2 -> SpO2 (p下标, 2下标)
+    "SpO2": {"unit": "%", "full": "S$_p$O$_2$"},                 
+    
+    "T": {"unit": "°C", "full": "T"},                      
+    "Urine": {"unit": "mL/6h", "full": "Urine"},           
+    "WBC": {"unit": "x10^9/L", "full": "WBC"},              
+    "Elixhauser_score": {"unit": "pts", "full": "Elixhauser_score"}, 
     "Weight": {"unit": "kg", "full": "Weight"}
 }
 
@@ -144,7 +161,7 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
         try: df = pd.read_csv(csv_path)
         except: pass
     if df is None:
-        # Fallback Data
+        # Fallback Data (Variables aligned with CSV style)
         data = {
             "Variable": ["Age (years)", "APSIII_score (pts)", "BUN (mg/dL)", "Elixhauser_score (pts)", "HCO3 (mmol/L)", "HR (bpm)", "MCV (fL)", "Mechnical_Ventilation (0=No, 1=Yes)", "T (°C)", "WBC (x10^9/L)", "Weight (Kg)", "Aniongap (mmol/L)"],
             "Global": ["< 60 (0)\n>= 60 (6)", "< 50 (0)\n>= 50 (10)", "< 30 (0)\n>= 30 (1)", "< 5 (0)\n>= 5 (2)", "< 22 (3)\n>= 22 (0)", "> 100 (2)\n<= 100 (0)", "> 90 (2)\n<= 90 (0)", "1 (4)\n0 (0)", "> 38 (0)\n<= 38 (2)", "> 12 (1)\n<= 12 (0)", "> 100 (4)\n<= 100 (0)", "> 15 (5)\n<= 15 (0)"],
@@ -155,7 +172,7 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
         df = pd.DataFrame(data)
 
     df = df.rename(columns=lambda x: x.strip())
-    # 标准化变量名，防止 CSV 和代码不一致
+    # 标准化变量名 (确保代码逻辑能匹配到VAR_META的键)
     df["Variable"] = df["Variable"].str.replace("fluid_amount", "Fluid Amount", case=False)
     df["Variable"] = df["Variable"].str.replace("aniongap", "Aniongap", case=False)
     
@@ -165,15 +182,12 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
     df_long = df_long.dropna(subset=["RuleString"])
     return df_long[~df_long["RuleString"].isin(["", "N/A", "--"])]
 
-# [重点修复] 全新的解析器，处理 "44.5 - 50.5 (4)" 这种一行多规则的格式
 def parse_rule_string(rule_str):
     rules = []
     # 移除换行，统一成一行处理
     rule_str = str(rule_str).replace("\r\n", " ").replace("\n", " ")
     
     # 正则表达式：查找所有 (数字) 结尾的片段
-    # 匹配模式： "条件内容 (分数)"
-    # 例如： "< 44.5 (0)" 或 "44.5 - 50.5 (4)"
     pattern = r"([^\(]+)\s*\((-?\d+)\)"
     matches = re.findall(pattern, rule_str)
     
@@ -188,22 +202,20 @@ def parse_rule_string(rule_str):
             mn, mx = -float('inf'), float('inf')
             
             if not nums:
-                continue # 没有数字跳过
+                continue 
                 
             # 解析条件逻辑
             if "-" in condition_str and len(nums) >= 2:
-                # 范围类型： 44.5 - 50.5
                 mn, mx = nums[0], nums[1]
             elif ">=" in condition_str:
                 mn = nums[0]
             elif ">" in condition_str:
-                mn = nums[0] + 1e-9 # 微小增量表示大于
+                mn = nums[0] + 1e-9 
             elif "<=" in condition_str:
                 mx = nums[0]
             elif "<" in condition_str:
-                mx = nums[0] - 1e-9 # 微小减量表示小于
+                mx = nums[0] - 1e-9 
             elif "=" in condition_str or len(nums) == 1:
-                # 等于类型
                 mn, mx = nums[0], nums[0]
                 
             rules.append({"min": mn, "max": mx, "points": points, "raw": f"{condition_str} ({points})"})
@@ -219,7 +231,6 @@ def calculate_score(user_inputs, rules_df, selected_group):
     
     for _, row in group_rules.iterrows():
         raw_var = row["Variable"]
-        # 清洗变量名以匹配输入
         clean_var = re.sub(r"\(.*\)", "", raw_var).strip()
         
         input_key = None
@@ -234,14 +245,10 @@ def calculate_score(user_inputs, rules_df, selected_group):
             points_added = 0
             matched_rule = None
             
-            # 遍历该变量的所有规则
             for rule in parsed:
-                # 判断值是否在区间内
                 if rule["min"] <= val <= rule["max"]:
                     points_added = rule["points"]
                     matched_rule = rule["raw"]
-                    # 找到匹配规则后，通常跳出（除非有累加逻辑，通常评分表是互斥的）
-                    # 为了优先匹配更精确的规则（如果有重叠），这里假设CSV顺序合理
                     if points_added != 0: break 
             
             if points_added != 0:
@@ -295,6 +302,8 @@ with col_inputs:
             meta = None
             for k, v in VAR_META.items():
                 if k.lower() == clean_name.lower(): meta = v; break
+            
+            # 使用 VAR_META 中定义的简写名称 (含 LaTeX)
             label = clean_name
             if meta: label = f"{meta['full']} ({meta['unit']})"
             
@@ -381,8 +390,15 @@ with col_results:
 
         if details:
             for d in details:
+                # [修正] 结果展示区也应用变量名简写
+                display_name = d['var']
+                for k, v in VAR_META.items():
+                    if k.lower() == d['var'].lower(): 
+                        display_name = v['full']
+                        break
+                
                 c1, c2, c3 = st.columns([0.45, 0.35, 0.2])
-                with c1: st.markdown(f"<span style='font-size:1.6rem; font-weight:bold; color:#333;'>{d['var']}</span>", unsafe_allow_html=True)
+                with c1: st.markdown(f"<span style='font-size:1.6rem; font-weight:bold; color:#333;'>{display_name}</span>", unsafe_allow_html=True)
                 with c2: st.markdown(f"<span style='font-size:1.4rem; color:#555;'>Value: {d['val']}</span>", unsafe_allow_html=True)
                 with c3: st.markdown(f"<span style='font-size:1.6rem; font-weight:bold; color:{color_hex}; float:right;'>+{d['points']} pts</span>", unsafe_allow_html=True)
                 st.markdown("<hr style='margin: 10px 0; border-top: 1px solid #eee;'>", unsafe_allow_html=True)
