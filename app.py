@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS 样式 (V14.0)
+# 2. CSS 样式 (V15.0)
 # ==========================================
 st.markdown("""
 <style>
@@ -93,31 +93,52 @@ st.markdown("""
 # 3. 核心逻辑
 # ==========================================
 
-# 标准化元数据字典 (键名均为小写，方便模糊匹配)
+# [V15.0] 元数据字典修正：T, Urine, Aniongap, Fluid Amount 单位
 VAR_CONFIG = {
     "age": {"full": "Age", "unit": "years"},
     "apsiii": {"full": "APSIII Score", "unit": "pts"},
-    "anion": {"full": "Anion Gap", "unit": "mmol/L"}, # 匹配 Anion Gap / Aniongap
+    
+    # [修改] Anion Gap -> Aniongap
+    "anion": {"full": "Aniongap", "unit": "mmol/L"}, 
+    
     "bun": {"full": "BUN", "unit": "mg/dL"},
     "dbp": {"full": "DBP", "unit": "mmHg"},
-    "fluid": {"full": "Fluid Amount", "unit": "mL"},  # 匹配 Fluid Amount / Fluid_amount
-    "hco3": {"full": "HCO$_3^-$", "unit": "mmol/L"},  # LaTeX: HCO3-
+    
+    # [修改] 单位 -> mL/6h
+    "fluid": {"full": "Fluid Amount", "unit": "mL/6h"},
+    
+    # LaTeX 格式
+    "hco3": {"full": "HCO$_3^-$", "unit": "mmol/L"},
+    
     "hr": {"full": "HR", "unit": "bpm"},
-    "heart": {"full": "HR", "unit": "bpm"},           # 匹配 Heart Rate
-    "k": {"full": "K$^+$", "unit": "mmol/L"},         # LaTeX: K+
+    "heart": {"full": "HR", "unit": "bpm"},
+    
+    # LaTeX 格式
+    "k": {"full": "K$^+$", "unit": "mmol/L"},
+    
     "mcv": {"full": "MCV", "unit": "fL"},
-    "mech": {"full": "Mech. Ventilation", "unit": "0=No, 1=Yes"}, # 匹配 Mechanical Ventilation
-    "na": {"full": "Na$^+$", "unit": "mmol/L"},       # LaTeX: Na+
+    "mech": {"full": "Mech. Ventilation", "unit": "0=No, 1=Yes"},
+    
+    # LaTeX 格式
+    "na": {"full": "Na$^+$", "unit": "mmol/L"},
+    
     "rdw": {"full": "RDW", "unit": "%"},
     "rr": {"full": "RR", "unit": "bpm"},
-    "resp": {"full": "RR", "unit": "bpm"},            # 匹配 Respiratory Rate
+    "resp": {"full": "RR", "unit": "bpm"},
     "sbp": {"full": "SBP", "unit": "mmHg"},
-    "spo2": {"full": "S$_p$O$_2$", "unit": "%"},      # LaTeX: SpO2
-    "t": {"full": "Temperature", "unit": "°C"},
-    "temp": {"full": "Temperature", "unit": "°C"},
-    "urine": {"full": "Urine Output", "unit": "mL/6h"}, # 强制 mL/6h
+    
+    # LaTeX 格式
+    "spo2": {"full": "S$_p$O$_2$", "unit": "%"},
+    
+    # [修改] Temperature -> T
+    "t": {"full": "T", "unit": "°C"},
+    "temp": {"full": "T", "unit": "°C"},
+    
+    # [修改] Urine Output -> Urine
+    "urine": {"full": "Urine", "unit": "mL/6h"},
+    
     "wbc": {"full": "WBC", "unit": "x10^9/L"},
-    "white": {"full": "WBC", "unit": "x10^9/L"},      # 匹配 White Blood Cells
+    "white": {"full": "WBC", "unit": "x10^9/L"},
     "elixhauser": {"full": "Elixhauser Score", "unit": "pts"},
     "weight": {"full": "Weight", "unit": "kg"}
 }
@@ -186,11 +207,9 @@ def calculate_score(user_inputs, rules_df, selected_group):
     
     for _, row in group_rules.iterrows():
         raw_var = row["Variable"]
-        # 清洗变量名
         clean_var = re.sub(r"\(.*\)", "", raw_var).strip()
         
         input_key = None
-        # 匹配输入框的 key
         for k in user_inputs.keys():
             if k.lower() == clean_var.lower(): 
                 input_key = k; break
@@ -214,19 +233,14 @@ def calculate_score(user_inputs, rules_df, selected_group):
     prob = 1 / (1 + np.exp(-logit))
     return total_score, prob, details
 
-# 智能匹配函数：根据变量名找配置
 def get_var_display(raw_name):
-    # 移除括号内容
     clean_name = re.sub(r"\(.*\)", "", raw_name).strip().lower()
-    
-    # 模糊匹配逻辑
     target_key = None
     for k in VAR_CONFIG.keys():
-        if k in clean_name: # 比如 "urine output" 包含 "urine"
+        if k in clean_name: 
             target_key = k
             break
             
-    # 特殊处理：区分 "Na" (Sodium) 和 "anion" (Anion Gap) 避免包含关系混淆
     if clean_name == "na" or "sodium" in clean_name: target_key = "na"
     if "anion" in clean_name: target_key = "anion"
     if "potassium" in clean_name: target_key = "k"
@@ -235,7 +249,6 @@ def get_var_display(raw_name):
         cfg = VAR_CONFIG[target_key]
         return f"{cfg['full']} ({cfg['unit']})"
     else:
-        # 默认回退
         return raw_name
 
 # ==========================================
@@ -257,7 +270,6 @@ st.markdown("""
 rules_df = load_rules()
 col_inputs, col_results = st.columns([1.1, 0.9], gap="large")
 
-# === 输入区 ===
 with col_inputs:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
@@ -276,8 +288,6 @@ with col_inputs:
         sorted_vars = sorted(current_group_vars)
         for i, var_str in enumerate(sorted_vars):
             clean_name = re.sub(r"\(.*\)", "", var_str).strip()
-            
-            # [关键] 调用智能显示函数
             display_label = get_var_display(clean_name)
             
             with input_cols[i % 2]:
@@ -287,7 +297,6 @@ with col_inputs:
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# === 结果区 ===
 with col_results:
     if submitted:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
@@ -357,7 +366,6 @@ with col_results:
 
         if details:
             for d in details:
-                # [修正] 结果展示区也应用变量名简写
                 display_name = get_var_display(d['var'])
                 
                 c1, c2, c3 = st.columns([0.45, 0.35, 0.2])
