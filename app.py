@@ -323,7 +323,8 @@ with col_left:
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
     st.markdown('<div class="subgroup-title">1. Patient Subgroup Profile</div>', unsafe_allow_html=True)
-    st.markdown('<div class="subgroup-desc">Please select the appropriate subgroup based on the patient\'s underlying disease for accurate risk assessment:</div>', unsafe_allow_html=True)
+    # [修改] 更新了此处的提示语，使其更专业
+    st.markdown('<div class="subgroup-desc">Select the patient\'s underlying condition to calibrate the risk assessment model:</div>', unsafe_allow_html=True)
     
     selected_group_label = st.radio("Select profile:", options=list(GROUP_MAPPING.keys()), index=0, label_visibility="collapsed", horizontal=True)
     selected_group = GROUP_MAPPING[selected_group_label]
