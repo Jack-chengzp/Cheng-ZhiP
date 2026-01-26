@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS 样式 (V15.0)
+# 2. CSS 样式 (V16.0 - 布局优化版)
 # ==========================================
 st.markdown("""
 <style>
@@ -45,7 +45,7 @@ st.markdown("""
         min-height: 80px !important;
         border-radius: 12px !important;
         width: 100% !important;
-        margin-top: 35px !important;
+        margin-top: 20px !important; /* 调整间距 */
         display: block !important;
     }
     div.stButton > button:hover {
@@ -60,20 +60,24 @@ st.markdown("""
     }
 
     /* === 字体设置 === */
-    .about-text { font-size: 24px !important; line-height: 1.5 !important; color: #37474f !important; }
-    div[role="radiogroup"] label p { font-size: 24px !important; font-weight: 700 !important; color: #263238 !important; }
+    .about-text { font-size: 20px !important; line-height: 1.5 !important; color: #37474f !important; }
+    div[role="radiogroup"] label p { font-size: 20px !important; font-weight: 700 !important; color: #263238 !important; }
     div[role="radiogroup"] label { padding: 15px !important; background: #f8f9fa; border: 2px solid #cfd8dc; border-radius: 10px; }
-    div[data-testid="stNumberInput"] label p { font-size: 24px !important; font-weight: 900 !important; color: #000000 !important; }
-    div[data-testid="stNumberInput"] input { font-size: 22px !important; min-height: 55px !important; }
+    div[data-testid="stNumberInput"] label p { font-size: 20px !important; font-weight: 900 !important; color: #000000 !important; }
+    div[data-testid="stNumberInput"] input { font-size: 20px !important; min-height: 50px !important; }
 
     /* === 标题与模块 === */
     .main-title { color: #1565c0; font-weight: 900; font-size: 3.5rem; margin-bottom: 10px; }
     .sub-title { color: #546e7a; font-size: 1.8rem; margin-bottom: 30px; }
-    .section-header { font-size: 2.4rem; font-weight: 900; color: #1a237e; border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px; }
-    .subgroup-title { font-size: 2.2rem; font-weight: 900; color: #000; margin-bottom: 15px; }
-    .card-container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; }
-    .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 30px; border-radius: 12px; margin-bottom: 40px; }
-    .about-title { font-size: 2.4rem; font-weight: 900; color: #0d47a1; margin-bottom: 15px; }
+    .section-header { font-size: 2.2rem; font-weight: 900; color: #1a237e; border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px; }
+    .subgroup-title { font-size: 2.0rem; font-weight: 900; color: #000; margin-bottom: 15px; }
+    
+    /* 容器样式调整 */
+    .card-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; margin-bottom: 20px; }
+    .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
+    .about-title { font-size: 2.2rem; font-weight: 900; color: #0d47a1; margin-bottom: 10px; }
+    
+    /* 结果区样式 */
     .risk-result-card { text-align: center; padding: 30px; border-radius: 20px; margin-bottom: 25px; }
     .risk-card-low { background:#e8f5e9; color:#1b5e20; border:5px solid #2e7d32; }
     .risk-card-mid { background:#fff9c4; color:#000; border:5px solid #fbc02d; }
@@ -81,62 +85,42 @@ st.markdown("""
     .protocol-box { background: #fafafa; border: 2px solid #e0e0e0; border-left-width: 10px; padding: 25px; border-radius: 10px; margin-bottom: 25px; }
     .protocol-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 10px; }
     .breakdown-box { background: white; border: 2px solid #eee; border-left-width: 10px; border-radius: 10px; padding: 25px; margin-top: 25px; }
-    .reference-box { background: white; border: 3px solid #eee; border-radius: 15px; padding: 25px; margin-bottom: 25px; }
-    .ref-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 15px; border-bottom: 2px solid #eee; }
-    .ref-item { font-size: 1.6rem; margin-bottom: 10px; display: flex; align-items: center; }
-    .ref-dot { width: 25px; height: 25px; border-radius: 50%; margin-right: 15px; display: inline-block; }
-    .placeholder-box { background: #f1f8e9; border: 4px dashed #a5d6a7; border-radius: 20px; min-height: 800px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+    
+    .reference-box { background: white; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 25px; }
+    .ref-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; border-bottom: 2px solid #eee; }
+    .ref-item { font-size: 1.5rem; margin-bottom: 8px; display: flex; align-items: center; }
+    .ref-dot { width: 20px; height: 20px; border-radius: 50%; margin-right: 12px; display: inline-block; }
+    
+    .placeholder-box { background: #f1f8e9; border: 4px dashed #a5d6a7; border-radius: 20px; min-height: 600px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 </style>
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. 核心逻辑
+# 3. 核心逻辑 (保持 V15.0 修正)
 # ==========================================
 
-# [V15.0] 元数据字典修正：T, Urine, Aniongap, Fluid Amount 单位
 VAR_CONFIG = {
     "age": {"full": "Age", "unit": "years"},
     "apsiii": {"full": "APSIII Score", "unit": "pts"},
-    
-    # [修改] Anion Gap -> Aniongap
-    "anion": {"full": "Aniongap", "unit": "mmol/L"}, 
-    
+    "anion": {"full": "Aniongap", "unit": "mmol/L"}, # Aniongap
     "bun": {"full": "BUN", "unit": "mg/dL"},
     "dbp": {"full": "DBP", "unit": "mmHg"},
-    
-    # [修改] 单位 -> mL/6h
-    "fluid": {"full": "Fluid Amount", "unit": "mL/6h"},
-    
-    # LaTeX 格式
-    "hco3": {"full": "HCO$_3^-$", "unit": "mmol/L"},
-    
+    "fluid": {"full": "Fluid Amount", "unit": "mL/6h"}, # Unit fixed
+    "hco3": {"full": "HCO$_3^-$", "unit": "mmol/L"},  # LaTeX
     "hr": {"full": "HR", "unit": "bpm"},
     "heart": {"full": "HR", "unit": "bpm"},
-    
-    # LaTeX 格式
-    "k": {"full": "K$^+$", "unit": "mmol/L"},
-    
+    "k": {"full": "K$^+$", "unit": "mmol/L"},         # LaTeX
     "mcv": {"full": "MCV", "unit": "fL"},
     "mech": {"full": "Mech. Ventilation", "unit": "0=No, 1=Yes"},
-    
-    # LaTeX 格式
-    "na": {"full": "Na$^+$", "unit": "mmol/L"},
-    
+    "na": {"full": "Na$^+$", "unit": "mmol/L"},       # LaTeX
     "rdw": {"full": "RDW", "unit": "%"},
     "rr": {"full": "RR", "unit": "bpm"},
     "resp": {"full": "RR", "unit": "bpm"},
     "sbp": {"full": "SBP", "unit": "mmHg"},
-    
-    # LaTeX 格式
-    "spo2": {"full": "S$_p$O$_2$", "unit": "%"},
-    
-    # [修改] Temperature -> T
-    "t": {"full": "T", "unit": "°C"},
+    "spo2": {"full": "S$_p$O$_2$", "unit": "%"},      # LaTeX
+    "t": {"full": "T", "unit": "°C"},                  # T
     "temp": {"full": "T", "unit": "°C"},
-    
-    # [修改] Urine Output -> Urine
-    "urine": {"full": "Urine", "unit": "mL/6h"},
-    
+    "urine": {"full": "Urine", "unit": "mL/6h"},       # Urine, Unit fixed
     "wbc": {"full": "WBC", "unit": "x10^9/L"},
     "white": {"full": "WBC", "unit": "x10^9/L"},
     "elixhauser": {"full": "Elixhauser Score", "unit": "pts"},
@@ -252,25 +236,30 @@ def get_var_display(raw_name):
         return raw_name
 
 # ==========================================
-# 4. 主界面
+# 4. 主界面布局 (重构)
 # ==========================================
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
-st.markdown("""
-<div class="about-box">
-    <div class="about-title">📘 About SHScore</div>
-    <div class="about-text">
-        The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool developed using the <b>MIMIC-IV</b> database.
-        It is specifically designed to predict <b>short-term (7-day) mortality risk</b> across diverse sepsis phenotypes (e.g., Renal, Liver, Immunodeficiency).
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
 rules_df = load_rules()
-col_inputs, col_results = st.columns([1.1, 0.9], gap="large")
 
-with col_inputs:
+# [重构] 左右分栏：左侧是 About + Input，右侧是 Legend + Result
+col_left, col_right = st.columns([1.1, 0.9], gap="large")
+
+# === 左栏 (About + 输入) ===
+with col_left:
+    # 1. About 模块 (挪到左侧)
+    st.markdown("""
+    <div class="about-box">
+        <div class="about-title">📘 About SHScore</div>
+        <div class="about-text">
+            The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool developed using the <b>MIMIC-IV</b> database.
+            It is specifically designed to predict <b>short-term (7-day) mortality risk</b> across diverse sepsis phenotypes (e.g., Renal, Liver, Immunodeficiency).
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 2. 配置与输入模块
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
@@ -297,11 +286,16 @@ with col_inputs:
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
-with col_results:
+# === 右栏 (图例 + 结果) ===
+with col_right:
+    # 逻辑判断：如果提交了显示结果，否则显示占位符
+    # 注意：Risk Score Interpretation (Legend) 始终显示在最上方
+    
     if submitted:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
+        # 风险逻辑
         if prob_percent < 10:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
@@ -327,6 +321,7 @@ with col_results:
 - **Source Control:** Urgent surgical consult within 1 hour.
 """
 
+        # 1. 动态图例
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation (By Mortality Rate)</div>
@@ -336,6 +331,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
 
+        # 2. 结果卡片
         st.markdown(f"""
         <div class="risk-result-card {risk_class}">
             <div style="font-size: 1.6rem; font-weight: 700; opacity: 0.8;">PREDICTED 7-DAY MORTALITY</div>
@@ -347,6 +343,7 @@ with col_results:
         </div>
         """, unsafe_allow_html=True)
         
+        # 3. 临床建议
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
@@ -356,6 +353,7 @@ with col_results:
         """, unsafe_allow_html=True)
         st.markdown(protocol_list)
 
+        # 4. 异常指标
         st.markdown(f"""
         <div class="breakdown-box" style="border-left-color: {color_hex};">
             <div style="color: {color_hex}; font-weight: 900; font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
@@ -367,7 +365,6 @@ with col_results:
         if details:
             for d in details:
                 display_name = get_var_display(d['var'])
-                
                 c1, c2, c3 = st.columns([0.45, 0.35, 0.2])
                 with c1: st.markdown(f"<span style='font-size:1.6rem; font-weight:bold; color:#333;'>{display_name}</span>", unsafe_allow_html=True)
                 with c2: st.markdown(f"<span style='font-size:1.4rem; color:#555;'>Value: {d['val']}</span>", unsafe_allow_html=True)
@@ -377,6 +374,7 @@ with col_results:
             st.success("✅ All clinical indicators are within the baseline range. (Score: 0)")
 
     else:
+        # 初始状态 (占位符)
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation</div>
