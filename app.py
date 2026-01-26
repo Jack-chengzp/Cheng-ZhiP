@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS 样式 (V19.0)
+# 2. CSS 样式 (V20.0 - 字体放大与布局修复版)
 # ==========================================
 st.markdown("""
 <style>
@@ -62,9 +62,9 @@ st.markdown("""
     /* === 字体设置 === */
     .about-text { font-size: 20px !important; line-height: 1.5 !important; color: #37474f !important; }
     
-    /* 单选框样式调整 */
+    /* 单选框样式 */
     div[role="radiogroup"] {
-        gap: 15px; /* 选项间距 */
+        gap: 15px;
     }
     div[role="radiogroup"] label p { font-size: 18px !important; font-weight: 700 !important; color: #37474f !important; }
     
@@ -79,9 +79,9 @@ st.markdown("""
     .subgroup-title { font-size: 2.0rem; font-weight: 900; color: #000; margin-bottom: 10px; }
     .subgroup-desc { font-size: 1.2rem; color: #666; margin-bottom: 15px; font-style: italic; }
     
-    /* 容器样式 */
+    /* 容器样式 - 调整下边距以减少空白 */
     .card-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; margin-bottom: 20px; }
-    .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
+    .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 25px; border-radius: 12px; margin-bottom: 20px; }
     .about-title { font-size: 2.2rem; font-weight: 900; color: #0d47a1; margin-bottom: 10px; }
     
     /* 结果区样式 */
@@ -89,8 +89,13 @@ st.markdown("""
     .risk-card-low { background:#e8f5e9; color:#1b5e20; border:5px solid #2e7d32; }
     .risk-card-mid { background:#fff9c4; color:#000; border:5px solid #fbc02d; }
     .risk-card-high { background:#ffebee; color:#b71c1c; border:5px solid #c62828; }
+    
+    /* 医学处置提示模块 (字体放大) */
     .protocol-box { background: #fafafa; border: 2px solid #e0e0e0; border-left-width: 10px; padding: 25px; border-radius: 10px; margin-bottom: 25px; }
-    .protocol-title { font-size: 2.0rem; font-weight: 900; margin-bottom: 10px; }
+    .protocol-title { font-size: 28px !important; font-weight: 900; margin-bottom: 15px; }
+    .protocol-content { font-size: 24px !important; line-height: 1.6 !important; color: #333; }
+    .protocol-content ul { margin-top: 10px; padding-left: 25px; }
+    .protocol-content li { margin-bottom: 10px; }
     
     /* 图例与占位符 */
     .reference-box { background: white; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 25px; }
@@ -240,7 +245,7 @@ def get_var_display(raw_name):
         return raw_name
 
 # ==========================================
-# 4. 主界面布局 (左输入，右结果)
+# 4. 主界面布局
 # ==========================================
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
@@ -265,7 +270,6 @@ with col_left:
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
-    # [修改] 亚组选择：保留标题，增加说明，改为水平排列
     st.markdown('<div class="subgroup-title">1. Patient Subgroup Profile</div>', unsafe_allow_html=True)
     st.markdown('<div class="subgroup-desc">Please select the appropriate subgroup based on the patient\'s underlying disease for accurate risk assessment:</div>', unsafe_allow_html=True)
     
@@ -301,27 +305,34 @@ with col_right:
         if prob_percent < 10:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
-            protocol_list = """
-- **Monitoring:** Standard vital signs q4h.
-- **Fluids:** Maintain euvolemia. avoid fluid overload.
-- **Antibiotics:** De-escalate based on culture results.
-"""
+            # 使用 HTML 列表实现大字体
+            protocol_content = """
+            <ul class="protocol-content">
+                <li><b>Monitoring:</b> Standard vital signs q4h.</li>
+                <li><b>Fluids:</b> Maintain euvolemia. Avoid fluid overload.</li>
+                <li><b>Antibiotics:</b> De-escalate based on culture results.</li>
+            </ul>
+            """
         elif prob_percent <= 30:
             risk_class = "risk-card-mid"; risk_label = "INTERMEDIATE RISK"; color_hex = "#FBC02D"
             protocol_title = "⚠️ Enhanced Surveillance Pathway"
-            protocol_list = """
-- **Monitoring:** Continuous telemetry. Hourly urine output.
-- **Labs:** Repeat lactate q6h if elevated.
-- **Intervention:** Consider low-dose vasopressors if MAP is unstable.
-"""
+            protocol_content = """
+            <ul class="protocol-content">
+                <li><b>Monitoring:</b> Continuous telemetry. Hourly urine output.</li>
+                <li><b>Labs:</b> Repeat lactate q6h if elevated.</li>
+                <li><b>Intervention:</b> Consider low-dose vasopressors if MAP is unstable.</li>
+            </ul>
+            """
         else:
             risk_class = "risk-card-high"; risk_label = "HIGH RISK (SEPSIS SHOCK)"; color_hex = "#c62828"
             protocol_title = "🚨 Aggressive Resuscitation Pathway"
-            protocol_list = """
-- **Hemodynamics:** Target MAP > 65 mmHg immediately with vasopressors.
-- **Support:** Prepare for mechanical ventilation or CRRT immediately.
-- **Source Control:** Urgent surgical consult within 1 hour.
-"""
+            protocol_content = """
+            <ul class="protocol-content">
+                <li><b>Hemodynamics:</b> Target MAP > 65 mmHg immediately with vasopressors.</li>
+                <li><b>Support:</b> Prepare for mechanical ventilation or CRRT immediately.</li>
+                <li><b>Source Control:</b> Urgent surgical consult within 1 hour.</li>
+            </ul>
+            """
 
         st.markdown("""
         <div class="reference-box">
@@ -343,21 +354,18 @@ with col_right:
         </div>
         """, unsafe_allow_html=True)
         
+        # [修改] 使用统一的样式 div 包含标题和 HTML 列表内容
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
                 {protocol_title}
             </div>
+            {protocol_content}
         </div>
         """, unsafe_allow_html=True)
-        st.markdown(protocol_list)
 
-        # [修改] 异常指标：单行简单文本样式
         if details:
-            # 构建字符串：Variable: Points; Variable: Points
-            # 为了简洁，直接使用清洗后的变量名 (clean_name)
             abnormal_str = "; ".join([f"{d['var']}: {d['points']}" for d in details])
-            
             st.markdown(f"""
             <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #eee; margin-top: 25px; text-align: left; font-family: 'Times New Roman', serif; font-size: 24px; line-height: 1.4;">
                 <strong style="color: #000;">Abnormal Risk Factors:</strong> 
