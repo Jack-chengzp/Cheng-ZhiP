@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS 样式 (V16.0 - 布局优化版)
+# 2. CSS 样式 (V17.0)
 # ==========================================
 st.markdown("""
 <style>
@@ -45,7 +45,7 @@ st.markdown("""
         min-height: 80px !important;
         border-radius: 12px !important;
         width: 100% !important;
-        margin-top: 20px !important; /* 调整间距 */
+        margin-top: 20px !important; 
         display: block !important;
     }
     div.stButton > button:hover {
@@ -72,7 +72,7 @@ st.markdown("""
     .section-header { font-size: 2.2rem; font-weight: 900; color: #1a237e; border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px; }
     .subgroup-title { font-size: 2.0rem; font-weight: 900; color: #000; margin-bottom: 15px; }
     
-    /* 容器样式调整 */
+    /* 容器样式 */
     .card-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; margin-bottom: 20px; }
     .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
     .about-title { font-size: 2.2rem; font-weight: 900; color: #0d47a1; margin-bottom: 10px; }
@@ -96,31 +96,31 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ==========================================
-# 3. 核心逻辑 (保持 V15.0 修正)
+# 3. 核心逻辑
 # ==========================================
 
 VAR_CONFIG = {
     "age": {"full": "Age", "unit": "years"},
     "apsiii": {"full": "APSIII Score", "unit": "pts"},
-    "anion": {"full": "Aniongap", "unit": "mmol/L"}, # Aniongap
+    "anion": {"full": "Aniongap", "unit": "mmol/L"},
     "bun": {"full": "BUN", "unit": "mg/dL"},
     "dbp": {"full": "DBP", "unit": "mmHg"},
-    "fluid": {"full": "Fluid Amount", "unit": "mL/6h"}, # Unit fixed
-    "hco3": {"full": "HCO$_3^-$", "unit": "mmol/L"},  # LaTeX
+    "fluid": {"full": "Fluid Amount", "unit": "mL/6h"},
+    "hco3": {"full": "HCO$_3^-$", "unit": "mmol/L"},
     "hr": {"full": "HR", "unit": "bpm"},
     "heart": {"full": "HR", "unit": "bpm"},
-    "k": {"full": "K$^+$", "unit": "mmol/L"},         # LaTeX
+    "k": {"full": "K$^+$", "unit": "mmol/L"},
     "mcv": {"full": "MCV", "unit": "fL"},
     "mech": {"full": "Mech. Ventilation", "unit": "0=No, 1=Yes"},
-    "na": {"full": "Na$^+$", "unit": "mmol/L"},       # LaTeX
+    "na": {"full": "Na$^+$", "unit": "mmol/L"},
     "rdw": {"full": "RDW", "unit": "%"},
     "rr": {"full": "RR", "unit": "bpm"},
     "resp": {"full": "RR", "unit": "bpm"},
     "sbp": {"full": "SBP", "unit": "mmHg"},
-    "spo2": {"full": "S$_p$O$_2$", "unit": "%"},      # LaTeX
-    "t": {"full": "T", "unit": "°C"},                  # T
+    "spo2": {"full": "S$_p$O$_2$", "unit": "%"},
+    "t": {"full": "T", "unit": "°C"},
     "temp": {"full": "T", "unit": "°C"},
-    "urine": {"full": "Urine", "unit": "mL/6h"},       # Urine, Unit fixed
+    "urine": {"full": "Urine", "unit": "mL/6h"},
     "wbc": {"full": "WBC", "unit": "x10^9/L"},
     "white": {"full": "WBC", "unit": "x10^9/L"},
     "elixhauser": {"full": "Elixhauser Score", "unit": "pts"},
@@ -141,7 +141,6 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
         try: df = pd.read_csv(csv_path)
         except: pass
     if df is None:
-        # Fallback Data
         data = {
             "Variable": ["Age (years)", "APSIII_score (pts)", "BUN (mg/dL)", "Elixhauser_score (pts)", "HCO3 (mmol/L)", "HR (bpm)", "MCV (fL)", "Mechnical_Ventilation (0=No, 1=Yes)", "T (°C)", "WBC (x10^9/L)", "Weight (Kg)", "Aniongap (mmol/L)"],
             "Global": ["< 60 (0)\n>= 60 (6)", "< 50 (0)\n>= 50 (10)", "< 30 (0)\n>= 30 (1)", "< 5 (0)\n>= 5 (2)", "< 22 (3)\n>= 22 (0)", "> 100 (2)\n<= 100 (0)", "> 90 (2)\n<= 90 (0)", "1 (4)\n0 (0)", "> 38 (0)\n<= 38 (2)", "> 12 (1)\n<= 12 (0)", "> 100 (4)\n<= 100 (0)", "> 15 (5)\n<= 15 (0)"],
@@ -152,7 +151,6 @@ def load_rules(csv_path="SHScore_Compact_Rules.csv"):
         df = pd.DataFrame(data)
 
     df = df.rename(columns=lambda x: x.strip())
-    # 基础清洗
     df["Variable"] = df["Variable"].str.replace("fluid_amount", "Fluid Amount", case=False)
     df["Variable"] = df["Variable"].str.replace("aniongap", "Anion Gap", case=False)
     
@@ -236,30 +234,29 @@ def get_var_display(raw_name):
         return raw_name
 
 # ==========================================
-# 4. 主界面布局 (重构)
+# 4. 主界面布局 (左输入，右结果)
 # ==========================================
 st.markdown('<div class="main-title">Sepsis Heterogeneity Score (SHScore)</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Advanced Mortality Risk Stratification for Sepsis Patients</div>', unsafe_allow_html=True)
 
 rules_df = load_rules()
 
-# [重构] 左右分栏：左侧是 About + Input，右侧是 Legend + Result
 col_left, col_right = st.columns([1.1, 0.9], gap="large")
 
-# === 左栏 (About + 输入) ===
+# === 左栏 ===
 with col_left:
-    # 1. About 模块 (挪到左侧)
+    # 恢复完整的 About 内容
     st.markdown("""
     <div class="about-box">
         <div class="about-title">📘 About SHScore</div>
         <div class="about-text">
-            The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool developed using the <b>MIMIC-IV</b> database.
-            It is specifically designed to predict <b>short-term (7-day) mortality risk</b> across diverse sepsis phenotypes (e.g., Renal, Liver, Immunodeficiency).
+            The <b>Sepsis Heterogeneity Score (SHScore)</b> is a novel, data-driven stratification tool developed using the <b>MIMIC-IV</b> database and externally validated within the <b>eICU</b> Collaborative Research Database. 
+            <br><br>
+            Recognizing the <b>clinical heterogeneity</b> arising from different underlying comorbidities, this model was trained using <b>dynamic time-series data</b> to capture physiological fluctuations often missed by static snapshots. It is specifically designed to predict <b>short-term (7-day) mortality risk</b> across diverse sepsis phenotypes (e.g., Renal, Liver, Immunodeficiency), demonstrating <b>superior predictive performance</b> compared to traditional scoring systems like SOFA and APACHE II.
         </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # 2. 配置与输入模块
     st.markdown('<div class="card-container">', unsafe_allow_html=True)
     st.markdown('<div class="section-header">⚙️ Configuration</div>', unsafe_allow_html=True)
     
@@ -286,16 +283,12 @@ with col_left:
         submitted = st.form_submit_button("🚀 Calculate Risk Score")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# === 右栏 (图例 + 结果) ===
+# === 右栏 ===
 with col_right:
-    # 逻辑判断：如果提交了显示结果，否则显示占位符
-    # 注意：Risk Score Interpretation (Legend) 始终显示在最上方
-    
     if submitted:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
-        # 风险逻辑
         if prob_percent < 10:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
@@ -321,7 +314,6 @@ with col_right:
 - **Source Control:** Urgent surgical consult within 1 hour.
 """
 
-        # 1. 动态图例
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation (By Mortality Rate)</div>
@@ -331,7 +323,6 @@ with col_right:
         </div>
         """, unsafe_allow_html=True)
 
-        # 2. 结果卡片
         st.markdown(f"""
         <div class="risk-result-card {risk_class}">
             <div style="font-size: 1.6rem; font-weight: 700; opacity: 0.8;">PREDICTED 7-DAY MORTALITY</div>
@@ -343,7 +334,6 @@ with col_right:
         </div>
         """, unsafe_allow_html=True)
         
-        # 3. 临床建议
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
@@ -353,7 +343,6 @@ with col_right:
         """, unsafe_allow_html=True)
         st.markdown(protocol_list)
 
-        # 4. 异常指标
         st.markdown(f"""
         <div class="breakdown-box" style="border-left-color: {color_hex};">
             <div style="color: {color_hex}; font-weight: 900; font-size: 2rem; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px;">
@@ -374,7 +363,6 @@ with col_right:
             st.success("✅ All clinical indicators are within the baseline range. (Score: 0)")
 
     else:
-        # 初始状态 (占位符)
         st.markdown("""
         <div class="reference-box">
             <div class="ref-title">🚦 Risk Score Interpretation</div>
