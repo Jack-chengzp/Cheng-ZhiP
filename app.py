@@ -15,7 +15,7 @@ st.set_page_config(
 )
 
 # ==========================================
-# 2. CSS 样式 (V20.0 - 字体放大与布局修复版)
+# 2. CSS 样式 (V22.0 - 字体统一版)
 # ==========================================
 st.markdown("""
 <style>
@@ -59,30 +59,68 @@ st.markdown("""
         color: white !important;
     }
 
-    /* === 字体设置 === */
-    .about-text { font-size: 20px !important; line-height: 1.5 !important; color: #37474f !important; }
-    
-    /* 单选框样式 */
-    div[role="radiogroup"] {
-        gap: 15px;
+    /* =========================================
+       [核心修改] 字体统一设置 
+       标题: 28px, 正文: 24px
+    ========================================= */
+
+    /* 1. 模块标题 (28px Bold) */
+    .section-header, 
+    .subgroup-title, 
+    .about-title, 
+    .ref-title, 
+    .protocol-title,
+    .abnormal-title { 
+        font-size: 28px !important; 
+        font-weight: 900 !important; 
+        margin-bottom: 15px !important;
+        line-height: 1.3 !important;
     }
-    div[role="radiogroup"] label p { font-size: 18px !important; font-weight: 700 !important; color: #37474f !important; }
     
-    /* 输入框样式 */
-    div[data-testid="stNumberInput"] label p { font-size: 20px !important; font-weight: 900 !important; color: #000000 !important; }
-    div[data-testid="stNumberInput"] input { font-size: 20px !important; min-height: 50px !important; }
+    /* 2. 正文内容 (24px) */
+    .about-text, 
+    .subgroup-desc, 
+    .ref-item, 
+    .protocol-content,
+    .risk-label-small { 
+        font-size: 24px !important; 
+        line-height: 1.5 !important; 
+        color: #37474f !important; 
+    }
+
+    /* 3. 输入控件字体 (24px) */
+    /* 单选框 */
+    div[role="radiogroup"] { gap: 15px; }
+    div[role="radiogroup"] label p { 
+        font-size: 24px !important; 
+        font-weight: 700 !important; 
+        color: #37474f !important; 
+    }
+    
+    /* 数字输入框标签 */
+    div[data-testid="stNumberInput"] label p { 
+        font-size: 24px !important; 
+        font-weight: 900 !important; 
+        color: #000000 !important; 
+    }
+    /* 数字输入框数值 */
+    div[data-testid="stNumberInput"] input { 
+        font-size: 24px !important; 
+        min-height: 55px !important; 
+    }
 
     /* === 标题与模块 === */
     .main-title { color: #1565c0; font-weight: 900; font-size: 3.5rem; margin-bottom: 10px; }
     .sub-title { color: #546e7a; font-size: 1.8rem; margin-bottom: 30px; }
-    .section-header { font-size: 2.2rem; font-weight: 900; color: #1a237e; border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px; }
-    .subgroup-title { font-size: 2.0rem; font-weight: 900; color: #000; margin-bottom: 10px; }
-    .subgroup-desc { font-size: 1.2rem; color: #666; margin-bottom: 15px; font-style: italic; }
     
-    /* 容器样式 - 调整下边距以减少空白 */
+    .section-header { color: #1a237e; border-bottom: 4px solid #eceff1; padding-bottom: 15px; margin-bottom: 25px; }
+    .subgroup-title { color: #000; margin-bottom: 10px; }
+    .subgroup-desc { font-style: italic; color: #666; margin-bottom: 15px; }
+    
+    /* 容器样式 */
     .card-container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; margin-bottom: 20px; }
-    .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 25px; border-radius: 12px; margin-bottom: 20px; }
-    .about-title { font-size: 2.2rem; font-weight: 900; color: #0d47a1; margin-bottom: 10px; }
+    .about-box { background: #e3f2fd; border-left: 12px solid #1565c0; padding: 25px; border-radius: 12px; margin-bottom: 25px; }
+    .about-title { color: #0d47a1; margin-bottom: 10px; }
     
     /* 结果区样式 */
     .risk-result-card { text-align: center; padding: 30px; border-radius: 20px; margin-bottom: 25px; }
@@ -90,18 +128,32 @@ st.markdown("""
     .risk-card-mid { background:#fff9c4; color:#000; border:5px solid #fbc02d; }
     .risk-card-high { background:#ffebee; color:#b71c1c; border:5px solid #c62828; }
     
-    /* 医学处置提示模块 (字体放大) */
-    .protocol-box { background: #fafafa; border: 2px solid #e0e0e0; border-left-width: 10px; padding: 25px; border-radius: 10px; margin-bottom: 25px; }
-    .protocol-title { font-size: 28px !important; font-weight: 900; margin-bottom: 15px; }
-    .protocol-content { font-size: 24px !important; line-height: 1.6 !important; color: #333; }
-    .protocol-content ul { margin-top: 10px; padding-left: 25px; }
-    .protocol-content li { margin-bottom: 10px; }
+    /* 医学处置提示模块 */
+    .protocol-box { 
+        background: #fafafa; 
+        border: 2px solid #e0e0e0; 
+        border-left-width: 10px; 
+        padding: 25px; 
+        border-radius: 10px; 
+        margin-bottom: 25px; 
+    }
+    
+    .protocol-content { 
+        color: #333; 
+        margin: 0;
+        padding-left: 30px; 
+    }
+    
+    .protocol-content li { 
+        margin-bottom: 12px; 
+        list-style-type: disc !important; 
+    }
     
     /* 图例与占位符 */
     .reference-box { background: white; border: 3px solid #eee; border-radius: 15px; padding: 20px; margin-bottom: 25px; }
-    .ref-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; border-bottom: 2px solid #eee; }
-    .ref-item { font-size: 1.5rem; margin-bottom: 8px; display: flex; align-items: center; }
-    .ref-dot { width: 20px; height: 20px; border-radius: 50%; margin-right: 12px; display: inline-block; }
+    .ref-title { margin-bottom: 10px; border-bottom: 2px solid #eee; }
+    .ref-item { margin-bottom: 8px; display: flex; align-items: center; }
+    .ref-dot { width: 24px; height: 24px; border-radius: 50%; margin-right: 12px; display: inline-block; }
     .placeholder-box { background: #f1f8e9; border: 4px dashed #a5d6a7; border-radius: 20px; min-height: 600px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
 </style>
 """, unsafe_allow_html=True)
@@ -302,37 +354,19 @@ with col_right:
         score, prob, details = calculate_score(user_inputs, rules_df, selected_group)
         prob_percent = prob * 100
         
+        # [逻辑修复] 确保内容和标题字体一致
         if prob_percent < 10:
             risk_class = "risk-card-low"; risk_label = "LOW RISK"; color_hex = "#2e7d32"
             protocol_title = "✅ Standard Care Pathway"
-            # 使用 HTML 列表实现大字体
-            protocol_content = """
-            <ul class="protocol-content">
-                <li><b>Monitoring:</b> Standard vital signs q4h.</li>
-                <li><b>Fluids:</b> Maintain euvolemia. Avoid fluid overload.</li>
-                <li><b>Antibiotics:</b> De-escalate based on culture results.</li>
-            </ul>
-            """
+            protocol_items = """<li><b>Monitoring:</b> Standard vital signs q4h.</li><li><b>Fluids:</b> Maintain euvolemia. Avoid fluid overload.</li><li><b>Antibiotics:</b> De-escalate based on culture results.</li>"""
         elif prob_percent <= 30:
             risk_class = "risk-card-mid"; risk_label = "INTERMEDIATE RISK"; color_hex = "#FBC02D"
             protocol_title = "⚠️ Enhanced Surveillance Pathway"
-            protocol_content = """
-            <ul class="protocol-content">
-                <li><b>Monitoring:</b> Continuous telemetry. Hourly urine output.</li>
-                <li><b>Labs:</b> Repeat lactate q6h if elevated.</li>
-                <li><b>Intervention:</b> Consider low-dose vasopressors if MAP is unstable.</li>
-            </ul>
-            """
+            protocol_items = """<li><b>Monitoring:</b> Continuous telemetry. Hourly urine output.</li><li><b>Labs:</b> Repeat lactate q6h if elevated.</li><li><b>Intervention:</b> Consider low-dose vasopressors if MAP is unstable.</li>"""
         else:
             risk_class = "risk-card-high"; risk_label = "HIGH RISK (SEPSIS SHOCK)"; color_hex = "#c62828"
             protocol_title = "🚨 Aggressive Resuscitation Pathway"
-            protocol_content = """
-            <ul class="protocol-content">
-                <li><b>Hemodynamics:</b> Target MAP > 65 mmHg immediately with vasopressors.</li>
-                <li><b>Support:</b> Prepare for mechanical ventilation or CRRT immediately.</li>
-                <li><b>Source Control:</b> Urgent surgical consult within 1 hour.</li>
-            </ul>
-            """
+            protocol_items = """<li><b>Hemodynamics:</b> Target MAP > 65 mmHg immediately with vasopressors.</li><li><b>Support:</b> Prepare for mechanical ventilation or CRRT immediately.</li><li><b>Source Control:</b> Urgent surgical consult within 1 hour.</li>"""
 
         st.markdown("""
         <div class="reference-box">
@@ -345,31 +379,33 @@ with col_right:
 
         st.markdown(f"""
         <div class="risk-result-card {risk_class}">
-            <div style="font-size: 1.6rem; font-weight: 700; opacity: 0.8;">PREDICTED 7-DAY MORTALITY</div>
+            <div class="risk-label-small" style="font-weight: 700; opacity: 0.8;">PREDICTED 7-DAY MORTALITY</div>
             <div style="font-size: 3rem; font-weight: 900; margin: 15px 0; color: {color_hex};">{risk_label}</div>
             <div style="font-size: 6rem; font-weight: 900; line-height: 1; margin-bottom: 20px;">{prob_percent:.1f}%</div>
-            <div style="background: rgba(255,255,255,0.6); display: inline-block; padding: 10px 30px; border-radius: 50px; font-weight: bold; font-size: 1.8rem;">
+            <div class="risk-label-small" style="background: rgba(255,255,255,0.6); display: inline-block; padding: 10px 30px; border-radius: 50px; font-weight: bold;">
                 SHScore: {score} pts
             </div>
         </div>
         """, unsafe_allow_html=True)
         
-        # [修改] 使用统一的样式 div 包含标题和 HTML 列表内容
+        # [字体统一] 28px 标题, 24px 正文
         st.markdown(f"""
         <div class="protocol-box" style="border-left-color: {color_hex};">
             <div class="protocol-title" style="color: {color_hex};">
                 {protocol_title}
             </div>
-            {protocol_content}
+            <ul class="protocol-content">
+                {protocol_items}
+            </ul>
         </div>
         """, unsafe_allow_html=True)
 
         if details:
             abnormal_str = "; ".join([f"{d['var']}: {d['points']}" for d in details])
             st.markdown(f"""
-            <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #eee; margin-top: 25px; text-align: left; font-family: 'Times New Roman', serif; font-size: 24px; line-height: 1.4;">
-                <strong style="color: #000;">Abnormal Risk Factors:</strong> 
-                <span style="color: #b71c1c; font-weight: bold; margin-left: 10px;">{abnormal_str}</span>
+            <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #eee; margin-top: 25px; text-align: left; line-height: 1.4;">
+                <div class="abnormal-title" style="color: #000; margin-bottom: 10px;">Abnormal Risk Factors:</div> 
+                <div style="font-size: 24px; color: #b71c1c; font-weight: bold;">{abnormal_str}</div>
             </div>
             """, unsafe_allow_html=True)
         else:
@@ -389,7 +425,7 @@ with col_right:
         <div class="placeholder-box">
             <div style="font-size: 8rem; margin-bottom: 30px;">👈</div>
             <h2 style="margin:0; font-weight:900; color:#558b2f; font-size: 3rem;">Ready to Calculate</h2>
-            <p style="margin-top: 25px; font-size:1.6rem; max-width:80%;">
+            <p style="margin-top: 25px; font-size: 24px; max-width:80%;">
                 Please enter clinical data in the <b>Configuration</b> panel to begin.
             </p>
         </div>
